@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSC - NU Laguna Project Showcase</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="landing-page" id="landingPage">
+        <div class="landing-content">
+            <div class="logo-container">
+                <img src="assets/msc-logo.png" alt="MSC Logo" class="msc-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <div class="logo-placeholder" style="display: none;">
+                    <div class="logo-text">MSC LOGO</div>
+                </div>
+            </div>
+            <h1 class="landing-title">MSC - NU Laguna</h1>
+            <p class="landing-subtitle">Explore our digital universe and discover amazing projects across the galaxy</p>
+            <p class="landing-subtitle">#AchieveMore</p>
+            <button class="rocket-btn" onclick="startJourneyWithAnimation()">
+                <div class="rocket-fin-bottom"></div>
+                <div class="rocket-fire">
+                    <div class="fire-particle fire-1"></div>
+                    <div class="fire-particle fire-2"></div>
+                    <div class="fire-particle fire-3"></div>
+                </div>
+                <span class="rocket-text">Start Your Journey</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Stars Background -->
+    <div class="stars" id="stars"></div>
+
+    <!-- Game Canvas -->
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- UI Overlay -->
+    <div class="ui-overlay">
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-text">Exploration Progress</div>
+            <div class="progress-fill">
+                <div class="progress-fill-bar" id="progressBar"></div>
+            </div>
+            <div style="font-size: 0.8rem; margin-top: 5px;">
+                <span id="discoveredCount">0</span> / <span id="totalCount">12</span> projects discovered
+            </div>
+        </div>
+
+        <!-- Project Panel -->
+        <div class="project-panel" id="projectPanel">
+            <h3 id="projectTitle">Project Title</h3>
+            <p id="projectDescription">Project description goes here...</p>
+            <div class="project-buttons">
+                <button class="project-btn demo-btn" onclick="openDemo()">View Demo</button>
+                <button class="project-btn close-btn" onclick="closeProject()">Continue Exploring</button>
+            </div>
+        </div>
+
+        <!-- QR Code Area -->
+        <div class="qr-area" id="qrArea">
+            <div class="qr-placeholder">
+                QR Code<br>Register Here
+            </div>
+            <div style="font-size: 0.8rem; text-align: center; color: #00BCF2;">
+                Scan for More Info
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="controls-title">Controls</div>
+            <div>Click to move astronaut</div>
+            <div>Approach planets to discover</div>
+            <div>Press M to toggle music</div>
+            <div>Ctrl+R to reset progress</div>
+            <button class="reset-btn" onclick="resetGameProgress()" style="margin-top: 10px; padding: 5px 10px; background: #ff4444; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 0.8rem;">
+                🔄 Reset Progress
+            </button>
+        </div>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

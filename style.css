@@ -1,0 +1,464 @@
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        /* Landing Page */
+        .landing-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, #1e3a8a 0%, #0f172a 50%, #000 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.8s ease;
+        }
+
+        .landing-page.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .landing-content {
+            text-align: center;
+            max-width: 600px;
+            padding: 2rem;
+        }
+
+        .landing-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #0078D4, #00BCF2, #5C2D91);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            0% { filter: drop-shadow(0 0 10px rgba(0, 120, 212, 0.3)); }
+            100% { filter: drop-shadow(0 0 20px rgba(0, 120, 212, 0.6)); }
+        }
+
+        .landing-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .rocket-btn {
+            border: none;
+            cursor: pointer;
+            position: relative;
+            width: 300px;
+            height: 80px;
+            background: #0078D4;
+            transition: all 0.3s ease;
+            overflow: visible;
+            margin: 2rem auto;
+            display: block;
+            border-radius: 50% 50% 50% 0% / 0% 50% 50% 49% ;
+            box-shadow: 0 5px 20px rgba(0, 120, 212, 0.4);
+        }
+
+        .rocket-btn:before {
+            content: '';
+            position: absolute;
+            right: -25px;
+            top: 60;
+            width: 0;
+            height: 0;
+            border-left: 60px solidrgb(223, 63, 35);
+            border-top: 30px solid transparent;
+            border-bottom: 35px solid transparent;
+            z-index: 2;
+        }
+
+        .rocket-btn:after {
+            content: '';
+            position: absolute;
+            left: -25px;
+            top: -30px;
+            width: 30px;
+            height: 30px;
+            background: #fa5111;
+            transform: skew(60deg, -15deg) rotate(-65deg);
+            z-index: 1;
+        }
+
+        .rocket-btn .rocket-fin-bottom {
+            position: absolute;
+            left: -25px;
+            bottom: -30px;
+            width: 30px;
+            height: 30px;
+            background: #fa5111;
+            transform: skew(-60deg, 15deg) rotate(65deg);
+            z-index: 1;
+        }
+        
+
+        .rocket-btn:hover {
+            transform: translateY(-3px) translateX(5px);
+            box-shadow: 0 8px 30px rgba(0, 120, 212, 0.6);
+        }
+
+        .rocket-fire {
+            position: absolute;
+            left: -49px;
+            top: 50%;
+            transform: translateY(-50%) rotate(255deg);
+            width: 70px;
+            height: 100px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .fire-particle {
+            position: absolute;
+            border-radius: 50% 5% 95% 50%;
+            animation: flicker 0.2s ease-in-out infinite alternate;
+        }
+
+        .fire-1 {
+            width: 50px;
+            height: 75px;
+            background: radial-gradient(circle, #ff6b35, #f7931e);
+            left: 20px;
+            top: -12px;
+            animation-delay: 0s;
+        }
+
+        .fire-2 {
+            width: 36px;
+            height: 54px;
+            background: radial-gradient(circle, #ff9500, #ffaa00);
+            left: 20px;
+            top: 10px;
+            animation-delay: 0.1s;
+        }
+
+        .fire-3 {
+            width: 20px;
+            height: 30px;
+            background: radial-gradient(circle, #ffaa00, #ffcc00);
+            left: 20px;
+            top: 32px;
+            animation-delay: 0.2s;
+        }
+
+        @keyframes flicker {
+            0% { 
+            transform: scale(1) rotate(-3deg) scaleX(0.8);
+            opacity: 0.7;
+            }
+            100% { 
+            transform: scale(1.2) rotate(3deg) scaleX(1.1);
+            opacity: 1;
+            }
+        }
+
+        .rocket-btn:hover .rocket-fire {
+            opacity: 1;
+        }
+
+        .rocket-text {
+            position: relative;
+            z-index: 3;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            padding: 0 2rem;
+            line-height: 70px;
+            text-align: center;
+        }
+
+        /* Launch animation */
+        @keyframes rocketLaunch {
+            0% {
+                transform: translateX(0) translateY(0) scale(1);
+                opacity: 1;
+            }
+            30% {
+                transform: translateX(100px) translateY(0px) scale(0.95);
+                opacity: 0.9;
+            }
+            70% {
+                transform: translateX(400px) translateY(0px) scale(0.7);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateX(800px) translateY(0px) scale(0.3);
+                opacity: 0;
+            }
+        }
+
+        .rocket-btn.launching {
+            animation: rocketLaunch .3s ease-out forwards;
+            pointer-events: none;
+        }
+
+        .rocket-btn.launching .rocket-fire {
+            opacity: 1 !important;
+        }
+
+        .rocket-btn.launching .rocket-text {
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Game Canvas */
+        #gameCanvas {
+            display: block;
+            background: radial-gradient(circle at 30% 30%, #1e1b4b 0%, #0f172a 40%, #000 100%);
+            cursor: pointer;
+        }
+
+        /* UI Overlay */
+        .ui-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .progress-bar {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 25px;
+            pointer-events: auto;
+            border: 2px solid #0078D4;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .progress-fill {
+            width: 200px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #0078D4, #00BCF2);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Project Panel */
+        .project-panel {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #0078D4;
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 400px;
+            text-align: center;
+            pointer-events: auto;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .project-panel.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .project-panel h3 {
+            color: #00BCF2;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .project-panel p {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .project-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .project-btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .demo-btn {
+            background: linear-gradient(45deg, #0078D4, #00BCF2);
+            color: white;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: 2px solid #5C2D91;
+            color: #5C2D91;
+        }
+
+        .project-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 120, 212, 0.3);
+        }
+
+        /* QR Code Area */
+        .qr-area {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 1rem;
+            border-radius: 10px;
+            border: 2px solid #00BCF2;
+            pointer-events: auto;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .qr-area.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .qr-placeholder {
+            width: 120px;
+            height: 120px;
+            background: #fff;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Controls */
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 1rem;
+            border-radius: 10px;
+            pointer-events: auto;
+            font-size: 0.9rem;
+        }
+
+        .controls-title {
+            color: #00BCF2;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        /* Logo Styles */
+        .logo-container {
+            margin-bottom: 2rem;
+        }
+
+        .msc-logo {
+            max-width: 100px;
+            height: auto;
+            filter: drop-shadow(0 0 10px rgba(0, 120, 212, 0.3));
+        }
+
+        .logo-placeholder {
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(45deg, #0078D4, #00BCF2);
+            border-radius: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .landing-title {
+                font-size: 2.5rem;
+            }
+            
+            .progress-bar {
+                top: 10px;
+                left: 10px;
+            }
+            
+            .progress-fill {
+                width: 150px;
+            }
+            
+            .project-panel {
+                max-width: 90%;
+                padding: 1.5rem;
+            }
+        }
+
+        /* Stars Animation */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.25; }
+            60% { opacity: 1; }
+        }
