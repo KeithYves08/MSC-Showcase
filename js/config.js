@@ -5,8 +5,8 @@
 // Game configuration constants
 export const CONFIG = {
     ASTRONAUT: {
-        SIZE: 20,
-        SPEED: 2,
+        SIZE: 25,
+        SPEED: 4,
         COLLISION_BUFFER: 10
     },
     STARS: {

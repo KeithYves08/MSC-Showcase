@@ -29,17 +29,30 @@ export function checkCollisions() {
                 }
             }
             
-            // Set current project for UI display
-            gameState.currentProject = project;
-            
-            // Trigger UI updates
-            if (window.showProjectPanel) {
-                window.showProjectPanel(project);
+            // Check if this project was recently closed - if so, don't reopen it
+            if (gameState.recentlyClosedProject && gameState.recentlyClosedProject.id === project.id) {
+                return; // Skip showing the panel for this project
             }
             
-            // Show QR area if it's the QR project
-            if (project.isQR && document.getElementById('qrArea')) {
-                document.getElementById('qrArea').classList.add('active');
+            // Only show project panel if there's no current project or it's different
+            if (!gameState.currentProject || gameState.currentProject.id !== project.id) {
+                // Set current project for UI display
+                gameState.currentProject = project;
+                
+                // Trigger UI updates
+                if (window.showProjectPanel) {
+                    window.showProjectPanel(project);
+                }
+                
+                // Show QR area if it's the QR project
+                if (project.isQR && document.getElementById('qrArea')) {
+                    document.getElementById('qrArea').classList.add('active');
+                }
+            }
+        } else {
+            // If astronaut moves away from the recently closed project, clear the flag
+            if (gameState.recentlyClosedProject && gameState.recentlyClosedProject.id === project.id) {
+                gameState.recentlyClosedProject = null;
             }
         }
     });

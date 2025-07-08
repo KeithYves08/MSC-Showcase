@@ -18,6 +18,8 @@ export const gameState = {
     projects: [],
     discoveredProjects: new Set(),
     currentProject: null,
+    recentlyClosedProject: null, // Track recently closed project to prevent immediate reopening
+    projectPanelTimer: null, // Timer for auto-closing project panel
     particles: [],
     stars: []
 };

@@ -86,6 +86,33 @@
         </button>
     </div>
 
+    <!-- Notification Modal -->
+    <div class="notification-modal" id="notificationModal">
+        <div class="notification-modal-overlay" id="notificationOverlay"></div>
+        <div class="notification-modal-content">
+            <div class="notification-modal-header" id="notificationHeader">
+                <i class="notification-icon" id="notificationIcon"></i>
+                <h3 id="notificationTitle">Notification</h3>
+                <button class="close-notification-btn" id="closeNotificationBtn">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="notification-modal-body">
+                <div class="notification-icon-container">
+                    <i class="notification-large-icon" id="notificationLargeIcon"></i>
+                </div>
+                <p class="notification-message" id="notificationMessage">This is a notification message.</p>
+                <p class="notification-subtitle" id="notificationSubtitle"></p>
+            </div>
+            <div class="notification-modal-footer">
+                <button class="notification-btn" id="notificationButton">
+                    <i class="fa-solid fa-check"></i>
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script type="module" src="js/main.js"></script>
 </body>
 </html>

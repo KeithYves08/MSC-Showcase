@@ -39,7 +39,7 @@ export function generateStars() {
     }
     
     // Generate bright stars (fewer, more special)
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 25; i++) {
         const brightStar = document.createElement('div');
         brightStar.className = 'bright-star';
         brightStar.style.left = Math.random() * 100 + '%';
@@ -49,7 +49,7 @@ export function generateStars() {
     }
     
     // Generate shooting stars (very few, random timing)
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 10; i++) {
         const shootingStar = document.createElement('div');
         shootingStar.className = 'shooting-star';
         shootingStar.style.left = Math.random() * 100 + '%';
@@ -82,26 +82,80 @@ export function updateProgress() {
 export function showProjectPanel(project) {
     gameState.currentProject = project;
     
-    const projectTitle = document.getElementById('projectTitle');
-    const projectDescription = document.getElementById('projectDescription');
-    const projectPanel = document.getElementById('projectPanel');
+    // Clear any existing timer
+    if (gameState.projectPanelTimer) {
+        clearTimeout(gameState.projectPanelTimer);
+    }
     
-    if (projectTitle) projectTitle.textContent = project.name;
-    if (projectDescription) projectDescription.textContent = project.description;
-    if (projectPanel) projectPanel.classList.add('active');
+    // Define button handlers inline to ensure proper scope access
+    const handleViewDemo = function() {
+        console.log('View Demo clicked'); // Debug log
+        if (gameState.currentProject && gameState.currentProject.url) {
+            window.open(gameState.currentProject.url, '_blank');
+            closeProject();
+        } else {
+            console.error('No project URL available');
+        }
+    };
+    
+    const handleCloseProject = function() {
+        console.log('Continue Exploring clicked'); // Debug log
+        closeProject();
+    };
+    
+    // Show project as info notification with demo button
+    showNotification(
+        'info',
+        project.name,
+        project.description,
+        'Explore this amazing project!',
+        'OK',
+        [
+            {
+                text: 'View Demo',
+                icon: 'fa-solid fa-external-link',
+                class: 'demo-btn',
+                onclick: handleViewDemo
+            },
+            {
+                text: 'Continue Exploring',
+                icon: 'fa-solid fa-rocket',
+                class: 'close-btn',
+                onclick: handleCloseProject
+            }
+        ]
+    );
+    
+    // Set up 5-second auto-close timer
+    gameState.projectPanelTimer = setTimeout(() => {
+        console.log('Auto-closing project panel after 5 seconds');
+        closeProject();
+    }, 5000);
     
     updateProgress(); // Update progress when a project is shown
 }
 
 // Close project panel
 export function closeProject() {
+    // Clear the auto-close timer if it exists
+    if (gameState.projectPanelTimer) {
+        clearTimeout(gameState.projectPanelTimer);
+        gameState.projectPanelTimer = null;
+    }
+    
+    // Close the notification modal
+    closeNotificationModal();
+    
+    // Store the recently closed project to prevent immediate reopening
+    gameState.recentlyClosedProject = gameState.currentProject;
+    gameState.currentProject = null;
+    
+    // Also handle legacy project panel elements
     const projectPanel = document.getElementById('projectPanel');
     const qrArea = document.getElementById('qrArea');
     
     if (projectPanel) projectPanel.classList.remove('active');
     if (qrArea) qrArea.classList.remove('active');
-    
-    gameState.currentProject = null;
 }
 
 // Open project demo in new tab
@@ -167,58 +221,228 @@ export function resizeCanvas() {
 
 // Reset progress with confirmation and return to landing page
 export function resetGameProgress() {
-    const confirmed = confirm(
-        "Are you sure you want to reset all progress?\n\n" +
-        "This will:\n" +
-        "• Clear all discovered planets\n" +
-        "• Reset astronaut position\n" +
-        "• Remove saved progress\n" +
-        "• Return to landing page\n\n" +
-        "This action cannot be undone!"
+    showNotification(
+        'warning',
+        'Reset Progress',
+        'Are you sure you want to reset all progress?',
+        'This will clear all discovered planets, reset astronaut position, remove saved progress, and return to landing page. This action cannot be undone!',
+        'OK',
+        [
+            {
+                text: 'Cancel',
+                icon: 'fa-solid fa-xmark',
+                class: 'cancel-btn',
+                onclick: closeNotificationModal
+            },
+            {
+                text: 'Reset Progress',
+                icon: 'fa-solid fa-arrows-rotate',
+                class: 'confirm-btn',
+                onclick: confirmReset
+            }
+        ]
     );
+}
+
+// Confirm reset action
+export function confirmReset() {
+    closeNotificationModal();
     
-    if (confirmed) {
-        const success = resetProgress();
-        if (success) {
-            // Show the landing page again
-            const landingPage = document.getElementById('landingPage');
-            if (landingPage) {
-                landingPage.classList.remove('hidden');
-            }
-            
-            // Reset rocket button state
-            const rocketBtn = document.querySelector('.rocket-btn');
-            if (rocketBtn) {
-                rocketBtn.classList.remove('launching');
-            }
-            
-            // Reset game state
-            gameState.gameStarted = false;
-            
-            // Regenerate stars for the landing page
-            generateStars();
-            
-            // Update progress display
-            updateProgress();
-            
-            // Show success message after a brief delay
-            setTimeout(() => {
-                alert("Progress has been reset successfully!\nWelcome back to the launch pad! 🚀");
-            }, 100);
-        } else {
-            alert("Failed to reset progress. Please try again.");
+    const success = resetProgress();
+    if (success) {
+        // Show the landing page again
+        const landingPage = document.getElementById('landingPage');
+        if (landingPage) {
+            landingPage.classList.remove('hidden');
         }
+        
+        // Reset rocket button state
+        const rocketBtn = document.querySelector('.rocket-btn');
+        if (rocketBtn) {
+            rocketBtn.classList.remove('launching');
+        }
+        
+        // Reset game state
+        gameState.gameStarted = false;
+        
+        // Regenerate stars for the landing page
+        generateStars();
+        
+        // Update progress display
+        updateProgress();
+        
+        // Show success message after a brief delay
+        setTimeout(() => {
+            showNotification(
+                'success',
+                'Reset Complete',
+                'Progress has been reset successfully!',
+                'Welcome back to the launch pad! 🚀'
+            );
+        }, 500);
+    } else {
+        showNotification(
+            'error',
+            'Error',
+            'Failed to reset progress. Please try again.'
+        );
+    }
+}
+
+// Generic notification system
+export function showNotification(type, title, message, subtitle = '', buttonText = 'OK', buttons = []) {
+    const notificationModal = document.getElementById('notificationModal');
+    const notificationHeader = document.getElementById('notificationHeader');
+    const notificationIcon = document.getElementById('notificationIcon');
+    const notificationTitle = document.getElementById('notificationTitle');
+    const notificationLargeIcon = document.getElementById('notificationLargeIcon');
+    const notificationMessage = document.getElementById('notificationMessage');
+    const notificationSubtitle = document.getElementById('notificationSubtitle');
+    const notificationFooter = document.querySelector('#notificationModal .notification-modal-footer');
+    
+    if (!notificationFooter) {
+        console.error('Notification footer not found');
+        return;
+    }
+    
+    // Set type-specific styles and icons
+    const typeConfig = {
+        error: {
+            icon: 'fa-solid fa-circle-exclamation',
+            largeIcon: 'fa-solid fa-triangle-exclamation',
+            color: '#e74c3c'
+        },
+        success: {
+            icon: 'fa-solid fa-check-circle',
+            largeIcon: 'fa-solid fa-rocket',
+            color: '#27ae60'
+        },
+        warning: {
+            icon: 'fa-solid fa-exclamation-triangle',
+            largeIcon: 'fa-solid fa-exclamation-triangle',
+            color: '#f39c12'
+        },
+        info: {
+            icon: 'fa-solid fa-info-circle',
+            largeIcon: 'fa-solid fa-info-circle',
+            color: '#0078D4'
+        }
+    };
+    
+    const config = typeConfig[type] || typeConfig.info;
+    
+    // Clear existing type classes
+    notificationModal.classList.remove('error', 'success', 'warning', 'info');
+    
+    // Add new type class
+    notificationModal.classList.add(type);
+    
+    // Set content
+    if (notificationIcon) {
+        notificationIcon.className = `notification-icon ${config.icon}`;
+    }
+    if (notificationTitle) {
+        notificationTitle.textContent = title;
+    }
+    if (notificationLargeIcon) {
+        notificationLargeIcon.className = `notification-large-icon ${config.largeIcon}`;
+        notificationLargeIcon.style.color = config.color;
+    }
+    if (notificationMessage) {
+        notificationMessage.textContent = message;
+        notificationMessage.style.color = config.color;
+    }
+    if (notificationSubtitle) {
+        notificationSubtitle.textContent = subtitle;
+        notificationSubtitle.style.display = subtitle ? 'block' : 'none';
+    }
+    
+    // Handle multiple buttons for confirmation dialogs
+    if (buttons.length > 0) {
+        notificationFooter.innerHTML = '';
+        buttons.forEach((button, index) => {
+            const btn = document.createElement('button');
+            btn.className = `notification-btn ${button.class || ''}`;
+            btn.innerHTML = `${button.icon ? `<i class="${button.icon}"></i>` : ''} ${button.text}`;
+            
+            // Ensure onclick is properly set using addEventListener
+            if (button.onclick && typeof button.onclick === 'function') {
+                btn.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    button.onclick();
+                });
+            }
+            
+            notificationFooter.appendChild(btn);
+        });
+    } else {
+        // Single button (default behavior)
+        notificationFooter.innerHTML = '';
+        const btn = document.createElement('button');
+        btn.className = 'notification-btn';
+        btn.id = 'notificationButton';
+        btn.innerHTML = `<i class="fa-solid fa-check"></i> ${buttonText}`;
+        
+        // Use addEventListener instead of onclick attribute
+        btn.addEventListener('click', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            closeNotificationModal();
+        });
+        
+        notificationFooter.appendChild(btn);
+    }
+    
+    // Show modal
+    if (notificationModal) {
+        notificationModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+// Close notification modal
+export function closeNotificationModal() {
+    const notificationModal = document.getElementById('notificationModal');
+    if (notificationModal) {
+        notificationModal.classList.remove('active');
+        document.body.style.overflow = 'hidden'; // Keep hidden since we're in a game
+    }
+}
+
+// Initialize modal event listeners
+export function initializeModalEventListeners() {
+    // Close button in header
+    const closeBtn = document.getElementById('closeNotificationBtn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            closeNotificationModal();
+        });
+    }
+    
+    // Overlay click to close
+    const overlay = document.getElementById('notificationOverlay');
+    if (overlay) {
+        overlay.addEventListener('click', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            closeNotificationModal();
+        });
     }
 }
 
 // Generate stars immediately when the module loads
 document.addEventListener('DOMContentLoaded', () => {
     generateStars();
+    initializeModalEventListeners();
 });
 
 // Also generate stars if DOM is already loaded
 if (document.readyState !== 'loading') {
     generateStars();
+    initializeModalEventListeners();
 }
 
 // Make functions globally available for HTML onclick handlers
@@ -228,3 +452,6 @@ window.closeProject = closeProject;
 window.openDemo = openDemo;
 window.showProjectPanel = showProjectPanel;
 window.resetGameProgress = resetGameProgress;
+window.confirmReset = confirmReset;
+window.showNotification = showNotification;
+window.closeNotificationModal = closeNotificationModal;
