@@ -76,10 +76,13 @@
             <div>Approach planets to discover</div>
             <div>Press M to toggle music</div>
             <div>Ctrl+R to reset progress</div>
-            <button class="reset-btn" onclick="resetGameProgress()" style="margin-top: 10px; padding: 5px 10px; background: #ff4444; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 0.8rem;">
-                🔄 Reset Progress
-            </button>
         </div>
+
+        <!-- Reset Button -->
+        <button class="reset-btn" onclick="resetGameProgress()">
+            <span class="reset-icon">🔄</span>
+            <span class="reset-text">Reset</span>
+        </button>
     </div>
 
     <script type="module" src="js/main.js"></script>

@@ -126,6 +126,11 @@ export function startJourney() {
 export function startJourneyWithAnimation() {
     const rocketBtn = document.querySelector('.rocket-btn');
     
+    // Prevent multiple clicks during animation
+    if (rocketBtn && rocketBtn.classList.contains('launching')) {
+        return; // Already launching
+    }
+    
     if (rocketBtn) {
         // Add launching class to trigger animation
         rocketBtn.classList.add('launching');
@@ -160,21 +165,46 @@ export function resizeCanvas() {
     }
 }
 
-// Reset progress with confirmation
+// Reset progress with confirmation and return to landing page
 export function resetGameProgress() {
     const confirmed = confirm(
         "Are you sure you want to reset all progress?\n\n" +
         "This will:\n" +
         "• Clear all discovered planets\n" +
         "• Reset astronaut position\n" +
-        "• Remove saved progress\n\n" +
+        "• Remove saved progress\n" +
+        "• Return to landing page\n\n" +
         "This action cannot be undone!"
     );
     
     if (confirmed) {
         const success = resetProgress();
         if (success) {
-            alert("Progress has been reset successfully!");
+            // Show the landing page again
+            const landingPage = document.getElementById('landingPage');
+            if (landingPage) {
+                landingPage.classList.remove('hidden');
+            }
+            
+            // Reset rocket button state
+            const rocketBtn = document.querySelector('.rocket-btn');
+            if (rocketBtn) {
+                rocketBtn.classList.remove('launching');
+            }
+            
+            // Reset game state
+            gameState.gameStarted = false;
+            
+            // Regenerate stars for the landing page
+            generateStars();
+            
+            // Update progress display
+            updateProgress();
+            
+            // Show success message after a brief delay
+            setTimeout(() => {
+                alert("Progress has been reset successfully!\nWelcome back to the launch pad! 🚀");
+            }, 100);
         } else {
             alert("Failed to reset progress. Please try again.");
         }

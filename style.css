@@ -417,6 +417,61 @@
             color: white;
         }
 
+        /* Reset Button - Top Right */
+        .reset-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #ff4757, #ff3838);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+            pointer-events: auto;
+            z-index: 200;
+        }
+
+        .reset-btn:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 25px rgba(255, 71, 87, 0.5);
+            background: linear-gradient(135deg, #ff3838, #ff2828);
+        }
+
+        .reset-btn:active {
+            transform: translateY(0) scale(1.02);
+        }
+
+        .reset-icon {
+            font-size: 1.1rem;
+            animation: rotateReset 2s ease-in-out infinite;
+        }
+
+        .reset-btn:hover .reset-icon {
+            animation: fastRotateReset 0.5s ease-in-out infinite;
+        }
+
+        @keyframes rotateReset {
+            0%, 90%, 100% { transform: rotate(0deg); }
+            95% { transform: rotate(360deg); }
+        }
+
+        @keyframes fastRotateReset {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .reset-text {
+            font-size: 0.9rem;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .landing-title {
@@ -435,6 +490,17 @@
             .project-panel {
                 max-width: 90%;
                 padding: 1.5rem;
+            }
+
+            .reset-btn {
+                top: 10px;
+                right: 10px;
+                padding: 10px 16px;
+                font-size: 0.8rem;
+            }
+            
+            .reset-text {
+                display: none; /* Hide text on mobile, show only icon */
             }
         }
 
