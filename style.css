@@ -422,21 +422,28 @@
             position: absolute;
             top: 20px;
             right: 20px;
+            width: 110px;
+            height: 65px;
             background: linear-gradient(135deg, #ff4757, #ff3838);
             border: none;
             color: white;
-            padding: 12px 20px;
-            border-radius: 50px;
+            border-radius: 16px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 1.2rem;
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            gap: 8;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
             pointer-events: auto;
             z-index: 200;
+            padding: 0;
+        }
+
+        .reset-btn i {
+            margin-right: .5rem;
         }
 
         .reset-btn:hover {
@@ -449,12 +456,12 @@
             transform: translateY(0) scale(1.02);
         }
 
-        .reset-icon {
-            font-size: 1.1rem;
+        .reset-btn i {
+            font-size: 1.3rem;
             animation: rotateReset 2s ease-in-out infinite;
         }
 
-        .reset-btn:hover .reset-icon {
+        .reset-btn:hover i {
             animation: fastRotateReset 0.5s ease-in-out infinite;
         }
 
@@ -466,10 +473,6 @@
         @keyframes fastRotateReset {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-
-        .reset-text {
-            font-size: 0.9rem;
         }
 
         /* Responsive */
@@ -495,12 +498,9 @@
             .reset-btn {
                 top: 10px;
                 right: 10px;
-                padding: 10px 16px;
-                font-size: 0.8rem;
-            }
-            
-            .reset-text {
-                display: none; /* Hide text on mobile, show only icon */
+                width: 60px;
+                height: 60px;
+                font-size: 1.3rem;
             }
         }
 
