@@ -14,13 +14,49 @@ export function generateStars() {
     // Clear existing stars
     starsContainer.innerHTML = '';
     
+    // Generate regular stars
     for (let i = 0; i < CONFIG.STARS.COUNT; i++) {
         const star = document.createElement('div');
         star.className = 'star';
         star.style.left = Math.random() * 100 + '%';
         star.style.top = Math.random() * 100 + '%';
         star.style.animationDelay = Math.random() * 3 + 's';
+        
+        // Add variety to stars - different sizes and brightness
+        const size = Math.random() * 3 + 1; // 1-4px
+        const opacity = Math.random() * 0.8 + 0.2; // 0.2-1.0
+        
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        star.style.opacity = opacity;
+        
+        // Some stars twinkle faster
+        if (Math.random() < 0.3) {
+            star.style.animationDuration = (Math.random() * 2 + 1) + 's';
+        }
+        
         starsContainer.appendChild(star);
+    }
+    
+    // Generate bright stars (fewer, more special)
+    for (let i = 0; i < 20; i++) {
+        const brightStar = document.createElement('div');
+        brightStar.className = 'bright-star';
+        brightStar.style.left = Math.random() * 100 + '%';
+        brightStar.style.top = Math.random() * 100 + '%';
+        brightStar.style.animationDelay = Math.random() * 4 + 's';
+        starsContainer.appendChild(brightStar);
+    }
+    
+    // Generate shooting stars (very few, random timing)
+    for (let i = 0; i < 3; i++) {
+        const shootingStar = document.createElement('div');
+        shootingStar.className = 'shooting-star';
+        shootingStar.style.left = Math.random() * 100 + '%';
+        shootingStar.style.top = Math.random() * 50 + '%'; // Keep in upper half
+        shootingStar.style.animationDelay = Math.random() * 10 + 5 + 's'; // 5-15s delay
+        shootingStar.style.animationDuration = (Math.random() * 2 + 2) + 's'; // 2-4s duration
+        starsContainer.appendChild(shootingStar);
     }
 }
 
@@ -143,6 +179,16 @@ export function resetGameProgress() {
             alert("Failed to reset progress. Please try again.");
         }
     }
+}
+
+// Generate stars immediately when the module loads
+document.addEventListener('DOMContentLoaded', () => {
+    generateStars();
+});
+
+// Also generate stars if DOM is already loaded
+if (document.readyState !== 'loading') {
+    generateStars();
 }
 
 // Make functions globally available for HTML onclick handlers
