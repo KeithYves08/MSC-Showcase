@@ -1,46 +1,52 @@
 # 🚀 MSC Showcase
 
-**MSC Showcase** is an interactive hero section built for our organization’s website. Rather than using a static hero banner, this project transforms the experience into a playable *space odyssey* where users control an astronaut avatar to explore our digital projects in a galaxy-themed environment.
+**MSC Showcase** is an interactive hero section created for our organization’s website. Instead of a static banner, it invites users into a *space odyssey*-themed experience where they control an astronaut avatar and explore a galaxy map filled with digital projects.
 
-## 🌌 Features
+## 🌌 Project Highlights
 
-- 🎮 **Interactive Avatar Navigation**  
-  Users click or tap to move a customizable astronaut avatar around a galaxy-like map.
+- 🧑‍🚀 **Avatar-Controlled Exploration**  
+  Users click or tap to guide a space-suited avatar across an animated galaxy.
 
-- 🪐 **Over 10 Digital Projects**  
-  Projects (games, websites, apps, etc.) are visually represented as planets or space stations. Reaching one lets users click to launch a live demo in a new tab.
+- 🪐 **10+ Interactive Digital Projects**  
+  Each project (websites, games, apps, etc.) is represented by a unique planet or station. Reaching a destination opens a live demo in a new tab.
 
-- 🎯 **Persistent Avatar Position**  
-  Avatar location remains unchanged even after opening project links — no respawning or reset.
+- 🎯 **QR Code Final Zone**  
+  A final destination reveals a scannable QR code for registration or bonus interaction.
 
-- 🛰️ **Final QR Code Zone**  
-  A special end area reveals a QR code for registration or additional interaction.
+- 🧠 **Persistent Avatar Position**  
+  User progress and avatar location persist via LocalStorage — no resets after exploring demos.
 
-- 🎨 **Visual Theme**  
-  - Space odyssey-inspired design  
-  - Uses the Microsoft color palette  
-  - Optional background music and SFX for immersion  
+- 🎨 **Theming & Aesthetics**  
+  - Microsoft color palette  
+  - Space odyssey-inspired visuals  
+  - Optional music and sound effects for immersion
 
 - 💻 **Desktop-First Design**  
-  Optimized for desktop browsers, with basic mobile compatibility.
+  Tailored for desktop use with basic mobile responsiveness.
 
-- 🌐 **Hosted as a Static Site**  
-  Deploy-ready via GitHub Pages or any static hosting platform.
+- 🌐 **Static Site Hosting**  
+  Deployable via GitHub Pages or any static web host.
 
-## 📦 Tech Stack
+---
 
-- **React** + **Three.js** (`@react-three/fiber`, `@react-three/drei`) for 3D rendering
-- **Tailwind CSS** for styling
-- **JavaScript / JSX** for interactivity
-- **Static Hosting** via GitHub Pages
+## 🧑‍💻 Tech Stack Overview
 
-## 🚧 Project Status
+### Frontend Core Technologies
+- **HTML5** – Semantic markup and `<canvas>` for rendering the game environment  
+- **CSS3** – Advanced styling using gradients, keyframe animations, and media queries  
+- **JavaScript (ES6+)** – Modern syntax, modular architecture, and clean code practices
 
-This project is currently under development. Features and project placements may still change as more content is added.
+### JavaScript Architecture
+- **ES6 Modules** – Organized structure using `import/export` for maintainability  
+- **Object-Oriented Programming** – Modular classes manage movement, UI, and interactivity  
+- **Canvas API** – 2D space rendering with real-time object interaction and animations  
+- **LocalStorage API** – Persists avatar position and game state between sessions
 
-## 🛠️ Setup Instructions
+---
 
-1. Clone the repo:
+## 🛠️ Getting Started
+
+1. **Clone the Repository**
    ```bash
    git clone https://github.com/yourusername/msc-showcase.git
    cd msc-showcase
