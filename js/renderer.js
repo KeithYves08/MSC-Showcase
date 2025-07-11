@@ -8,6 +8,9 @@ import { PROJECT_ICONS } from './config.js';
 // Rendering optimization variables
 let lastAstronautPos = { x: 0, y: 0 };
 let dirtyRects = [];
+let backgroundCanvas = null;
+let backgroundCtx = null;
+let backgroundGenerated = false;
 
 // Load wooza avatar image
 let woozaImage = null;
@@ -15,12 +18,69 @@ const loadWoozaImage = () => {
     if (!woozaImage) {
         woozaImage = new Image();
         woozaImage.src = 'assets/wooza.png';
+        woozaImage.onload = () => {
+            console.log('Wooza image loaded successfully');
+        };
     }
     return woozaImage;
 };
 
 // Initialize wooza image
 loadWoozaImage();
+
+// Create offscreen canvas for background
+function createBackgroundCanvas() {
+    if (!backgroundCanvas) {
+        backgroundCanvas = document.createElement('canvas');
+        backgroundCtx = backgroundCanvas.getContext('2d');
+    }
+}
+
+// Generate background once and reuse
+function generateBackground() {
+    if (backgroundGenerated) return;
+    
+    createBackgroundCanvas();
+    const canvas = gameState.canvas;
+    
+    backgroundCanvas.width = canvas.width;
+    backgroundCanvas.height = canvas.height;
+    
+    // Create gradient background
+    const gradient = backgroundCtx.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, '#0B0B2F');
+    gradient.addColorStop(0.5, '#1E1E3F');
+    gradient.addColorStop(1, '#2D2D5F');
+    
+    backgroundCtx.fillStyle = gradient;
+    backgroundCtx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw stars efficiently
+    backgroundCtx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+    for (let i = 0; i < 150; i++) {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const size = Math.random() * 2 + 0.5;
+        
+        backgroundCtx.beginPath();
+        backgroundCtx.arc(x, y, size, 0, Math.PI * 2);
+        backgroundCtx.fill();
+    }
+    
+    backgroundGenerated = true;
+}
+
+// Reset background cache (called on resize)
+export function resetBackgroundCache() {
+    backgroundGenerated = false;
+    if (backgroundCanvas) {
+        backgroundCanvas.width = 0;
+        backgroundCanvas.height = 0;
+    }
+}
+
+// Export to global for access from UI
+window.resetBackgroundCache = resetBackgroundCache;
 
 // Add dirty rectangle to be redrawn
 function addDirtyRect(x, y, width, height) {
@@ -295,39 +355,21 @@ export function drawProjects() {
     gameState.projects.forEach(project => {
         ctx.save();
         
-        // Planet with majestic design
-        ctx.save();
+        // Simplified planet rendering for better performance
         
-        // Planet glow effect with pulsing
-        const glowPulse = Math.sin(project.pulse) * 0.5 + 0.5; // Creates value between 0 and 1
+        // Planet glow effect (simplified)
         if (project.discovered) {
             ctx.shadowColor = project.color;
-            ctx.shadowBlur = 20 + (glowPulse * 30); // Pulses between 20 and 50
+            ctx.shadowBlur = 15;
         } else {
             ctx.shadowColor = project.color;
-            ctx.shadowBlur = 12 + (glowPulse * 18); // Pulses between 12 and 30
+            ctx.shadowBlur = 8;
         }
         
-        // Outer space dust ring
-        ctx.fillStyle = project.color;
-        ctx.globalAlpha = 0.15;
-        ctx.beginPath();
-        ctx.arc(project.x, project.y, project.size + 12, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.globalAlpha = 1;
-        
-        // Planet atmospheric ring
-        ctx.fillStyle = project.color;
-        ctx.globalAlpha = 0.4;
-        ctx.beginPath();
-        ctx.arc(project.x, project.y, project.size + 6, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.globalAlpha = 1;
-        
-        // Planet main body with stellar gradient
+        // Single planet body (remove multiple layers for performance)
         const planetGradient = ctx.createRadialGradient(
-            project.x - project.size * 0.4, project.y - project.size * 0.4, 0,
-            project.x, project.y, project.size * 1.2
+            project.x - project.size * 0.3, project.y - project.size * 0.3, 0,
+            project.x, project.y, project.size
         );
         
         // Create color variations based on project type
@@ -444,65 +486,12 @@ export function drawBackground() {
         return;
     }
     
-    // Create space background gradient
-    const gradient = ctx.createRadialGradient(
-        canvas.width * 0.3, canvas.height * 0.3, 0,
-        canvas.width * 0.3, canvas.height * 0.3, Math.max(canvas.width, canvas.height)
-    );
+    // Generate background once and reuse
+    generateBackground();
     
-    gradient.addColorStop(0, '#1e1b4b');
-    gradient.addColorStop(0.4, '#0f172a');
-    gradient.addColorStop(1, '#000000');
-    
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // Draw stars with twinkling effects
-    const numStars = Math.floor((canvas.width * canvas.height) / 3200); // Reduced divisor for more stars
-    const time = Date.now() * 0.001; // Time for twinkling animation
-    
-    for (let i = 0; i < numStars; i++) {
-        // Use random seed based on index for consistent but random positions
-        const seedX = (i * 9301 + 49297) % 233280;
-        const seedY = (i * 2971 + 20749) % 233280;
-        
-        const x = (seedX / 233280) * canvas.width;
-        const y = (seedY / 233280) * canvas.height;
-        
-        // Create twinkling effect using sine waves with different frequencies
-        const twinkle1 = Math.sin(time * 2 + i * 0.1) * 0.5 + 0.7;
-        const twinkle2 = Math.sin(time * 1.5 + i * 0.2) * 0.3 + 0.9;
-        const twinkle = twinkle1 * twinkle2;
-        
-        // Base opacity varies per star, enhanced by twinkling
-        const baseOpacity = 0.3 + (i % 20) * 0.03;
-        const alpha = baseOpacity + (twinkle * 0.4);
-        
-        ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
-        
-        // Add glow effect for brighter stars
-        if (alpha > 0.6) {
-            ctx.shadowColor = 'rgba(255, 255, 255, 0.5)';
-            ctx.shadowBlur = 2;
-        }
-        
-        // Different star sizes based on brightness and type - made smaller
-        if (i % 12 === 0) {
-            // Large bright stars
-            ctx.fillRect(x - 0.5, y - 0.5, 2, 2);
-            // Add cross pattern for bright stars
-            ctx.fillRect(x - 1, y + 0.5, 3, 1);
-            ctx.fillRect(x + 0.5, y - 1, 1, 3);
-        } else if (i % 6 === 0) {
-            // Medium stars
-            ctx.fillRect(x, y, 1.5, 1.5);
-        } else {
-            // Small stars
-            ctx.fillRect(x, y, 1, 1);
-        }
-        
-        // Reset shadow
-        ctx.shadowBlur = 0;
+    // Simply draw the pre-generated background
+    if (backgroundCanvas && backgroundGenerated) {
+        ctx.drawImage(backgroundCanvas, 0, 0);
     }
 }
 
@@ -635,7 +624,10 @@ export function animateSpaceCursor() {
     // Use a separate animation loop for cursor to avoid blocking main game loop
     if (cursorAnimationId) return; // Already animating
     
-    function cursorAnimationLoop() {
+    let lastCursorAnimTime = 0;
+    const cursorAnimInterval = 100; // Slower cursor animation (10 FPS)
+    
+    function cursorAnimationLoop(currentTime) {
         if (!spaceCursor) return;
         
         // Skip if hovering
@@ -644,7 +636,14 @@ export function animateSpaceCursor() {
             return;
         }
         
-        const time = Date.now() * 0.0003; // Even slower time multiplier
+        // Throttle cursor animation
+        if (currentTime - lastCursorAnimTime < cursorAnimInterval) {
+            cursorAnimationId = requestAnimationFrame(cursorAnimationLoop);
+            return;
+        }
+        
+        lastCursorAnimTime = currentTime;
+        const time = currentTime * 0.0003; // Even slower time multiplier
         const outer = spaceCursor.querySelector('.cursor-outer');
         const inner = spaceCursor.querySelector('.cursor-inner');
         

@@ -12,6 +12,11 @@ import { playSoundEffect, startThrustSound, stopThrustSound } from './audio.js';
 export function checkCollisions() {
     const astronaut = gameState.astronaut;
     
+    // Skip collision detection if astronaut is not moving (optimization)
+    if (!astronaut.isMoving) {
+        return;
+    }
+    
     // Use spatial optimization - only check nearby projects
     const nearbyProjects = gameState.projects.filter(project => {
         const dx = Math.abs(astronaut.x - project.x);
@@ -19,8 +24,18 @@ export function checkCollisions() {
         const maxDistance = astronaut.size + project.size + CONFIG.ASTRONAUT.COLLISION_BUFFER + 50;
         
         // Quick distance check using Manhattan distance first
-        return dx + dy < maxDistance * 1.5;
+        return dx < maxDistance && dy < maxDistance;
     });
+    
+    // Further optimize by checking only the closest projects
+    if (nearbyProjects.length > 3) {
+        nearbyProjects.sort((a, b) => {
+            const distA = Math.abs(astronaut.x - a.x) + Math.abs(astronaut.y - a.y);
+            const distB = Math.abs(astronaut.x - b.x) + Math.abs(astronaut.y - b.y);
+            return distA - distB;
+        });
+        nearbyProjects.splice(3); // Keep only the 3 closest
+    }
     
     nearbyProjects.forEach(project => {
         const dx = astronaut.x - project.x;

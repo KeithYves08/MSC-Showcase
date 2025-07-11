@@ -6,9 +6,10 @@ import { gameState } from './gameState.js';
 
 // Audio configuration
 const AUDIO_CONFIG = {
-    BGM_VOLUME: 0.3,
-    SFX_VOLUME: 0.5,
-    FADE_DURATION: 1000
+    BGM_VOLUME: 0.2, // Reduced volume
+    SFX_VOLUME: 0.4, // Reduced volume
+    FADE_DURATION: 1000,
+    SAMPLE_RATE_REDUCTION: 0.5 // Reduce sample rate for better performance
 };
 
 // Audio context and sources
@@ -17,13 +18,16 @@ let bgmSource = null;
 let bgmGain = null;
 let sfxGain = null;
 let thrustSource = null;
+let isAudioInitialized = false;
 
 // Audio buffers
 const audioBuffers = new Map();
 const audioSources = new Map();
 
-// Initialize audio system
+// Initialize audio system with lazy loading
 export function initializeAudio() {
+    if (isAudioInitialized) return;
+    
     try {
         // Create audio context
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -39,9 +43,10 @@ export function initializeAudio() {
         bgmGain.connect(audioContext.destination);
         sfxGain.connect(audioContext.destination);
         
-        // Generate procedural audio
-        generateProceduralAudio();
+        // Generate procedural audio in background
+        setTimeout(() => generateProceduralAudio(), 100);
         
+        isAudioInitialized = true;
         console.log('Audio system initialized successfully');
     } catch (error) {
         console.warn('Audio initialization failed:', error);

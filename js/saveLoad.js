@@ -37,7 +37,10 @@ export function loadProgress() {
     return false;
 }
 
-// Save progress to localStorage
+// Save progress to localStorage (optimized)
+let lastSaveTime = 0;
+let pendingSave = false;
+
 export function saveProgress() {
     try {
         const progress = {
@@ -65,10 +68,20 @@ export function clearProgress() {
     }
 }
 
-// Auto-save progress periodically
+// Auto-save progress periodically (optimized)
 export function autoSave() {
-    if (Math.random() < CONFIG.ANIMATION.SAVE_FREQUENCY) {
-        saveProgress();
+    const currentTime = Date.now();
+    
+    // Only save if enough time has passed and changes were made
+    if (currentTime - lastSaveTime > 5000 && !pendingSave) { // 5 seconds minimum interval
+        pendingSave = true;
+        
+        // Use setTimeout to avoid blocking the game loop
+        setTimeout(() => {
+            saveProgress();
+            lastSaveTime = currentTime;
+            pendingSave = false;
+        }, 0);
     }
 }
 

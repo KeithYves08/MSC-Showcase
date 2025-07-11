@@ -190,6 +190,11 @@ export function resizeCanvas() {
         // Update astronaut position if it's outside bounds
         if (gameState.astronaut.x > canvas.width) gameState.astronaut.x = canvas.width / 2;
         if (gameState.astronaut.y > canvas.height) gameState.astronaut.y = canvas.height / 2;
+        
+        // Reset background cache when window is resized
+        if (window.resetBackgroundCache) {
+            window.resetBackgroundCache();
+        }
     }
 }
 

@@ -8,7 +8,9 @@ import { toggleMusic } from './ui.js';
 
 // Input optimization variables
 let lastInputTime = 0;
-let inputThrottleDelay = 16; // ~60 FPS throttling
+let inputThrottleDelay = 32; // Reduced to 30 FPS for input (less strain)
+let cachedCanvasRect = null;
+let rectCacheTime = 0;
 
 // Initialize input handlers
 export function initializeInputHandlers() {
@@ -16,10 +18,25 @@ export function initializeInputHandlers() {
     
     // Mouse/touch controls for astronaut movement
     canvas.addEventListener('click', handleCanvasClick);
-    canvas.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener('mousemove', handleMouseMove, { passive: true });
     
     // Keyboard controls
     document.addEventListener('keydown', handleKeyDown);
+    
+    // Cache canvas rect periodically
+    setInterval(() => {
+        cachedCanvasRect = gameState.canvas.getBoundingClientRect();
+        rectCacheTime = performance.now();
+    }, 1000); // Update every second
+}
+
+// Get cached canvas rect or calculate new one
+function getCanvasRect() {
+    if (!cachedCanvasRect || (performance.now() - rectCacheTime) > 1000) {
+        cachedCanvasRect = gameState.canvas.getBoundingClientRect();
+        rectCacheTime = performance.now();
+    }
+    return cachedCanvasRect;
 }
 
 // Throttled mouse move handler for smoother continuous movement
@@ -33,7 +50,7 @@ function handleMouseMove(e) {
     
     // Only move if mouse button is pressed
     if (e.buttons === 1) {
-        const rect = gameState.canvas.getBoundingClientRect();
+        const rect = getCanvasRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
         
@@ -45,7 +62,7 @@ function handleMouseMove(e) {
 function handleCanvasClick(e) {
     if (!gameState.gameStarted) return;
     
-    const rect = gameState.canvas.getBoundingClientRect();
+    const rect = getCanvasRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     
