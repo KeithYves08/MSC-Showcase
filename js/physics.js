@@ -6,20 +6,36 @@ import { gameState, areAllRegularPlanetsDiscovered, addQRPlanet } from './gameSt
 import { CONFIG } from './config.js';
 import { saveProgress } from './saveLoad.js';
 import { updateProgress } from './ui.js';
+import { playSoundEffect, startThrustSound, stopThrustSound } from './audio.js';
 
 // Check for collisions between astronaut and planets
 export function checkCollisions() {
     const astronaut = gameState.astronaut;
     
-    gameState.projects.forEach(project => {
+    // Use spatial optimization - only check nearby projects
+    const nearbyProjects = gameState.projects.filter(project => {
+        const dx = Math.abs(astronaut.x - project.x);
+        const dy = Math.abs(astronaut.y - project.y);
+        const maxDistance = astronaut.size + project.size + CONFIG.ASTRONAUT.COLLISION_BUFFER + 50;
+        
+        // Quick distance check using Manhattan distance first
+        return dx + dy < maxDistance * 1.5;
+    });
+    
+    nearbyProjects.forEach(project => {
         const dx = astronaut.x - project.x;
         const dy = astronaut.y - project.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
+        const distanceSquared = dx * dx + dy * dy;
+        const collisionDistance = astronaut.size + project.size + CONFIG.ASTRONAUT.COLLISION_BUFFER;
         
-        if (distance < astronaut.size + project.size + CONFIG.ASTRONAUT.COLLISION_BUFFER) {
+        if (distanceSquared < collisionDistance * collisionDistance) {
             if (!project.discovered) {
                 project.discovered = true;
                 gameState.discoveredProjects.add(project.id);
+                
+                // Play planet discovery sound
+                playSoundEffect('planet_discovery');
+                
                 saveProgress();
                 updateProgress(); // Update progress bar immediately
                 
@@ -65,12 +81,34 @@ export function updateAstronaut() {
     const dy = astronaut.targetY - astronaut.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
     
-    if (distance > 5) {
-        astronaut.x += (dx / distance) * astronaut.speed;
-        astronaut.y += (dy / distance) * astronaut.speed;
+    // Use distance squared for better performance (avoid sqrt when possible)
+    const distanceSquared = dx * dx + dy * dy;
+    const threshold = 25; // 5 squared
+    
+    if (distanceSquared > threshold) {
+        // Play rocket thrust sound when starting to move
+        if (!astronaut.isMoving) {
+            startThrustSound();
+            astronaut.isMoving = true;
+        }
         
-        // Update angle based on movement direction
-        astronaut.angle = Math.atan2(dy, dx) + Math.PI / 2;
+        // Use normalized movement for smoother motion
+        const invDistance = 1 / distance;
+        astronaut.x += dx * invDistance * astronaut.speed;
+        astronaut.y += dy * invDistance * astronaut.speed;
+        
+        // Update angle based on movement direction (wooza.png already points right)
+        astronaut.angle = Math.atan2(dy, dx);
+    } else {
+        // Stop thrust sound when not moving
+        if (astronaut.isMoving) {
+            stopThrustSound();
+            astronaut.isMoving = false;
+        }
+        
+        // Snap to target when very close to prevent micro-movements
+        astronaut.x = astronaut.targetX;
+        astronaut.y = astronaut.targetY;
     }
 }
 

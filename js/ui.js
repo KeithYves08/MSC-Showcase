@@ -5,60 +5,7 @@
 import { gameState, getDiscoveryProgress } from './gameState.js';
 import { CONFIG } from './config.js';
 import { resetProgress } from './saveLoad.js';
-
-// Generate animated stars background
-export function generateStars() {
-    const starsContainer = document.getElementById('stars');
-    if (!starsContainer) return;
-    
-    // Clear existing stars
-    starsContainer.innerHTML = '';
-    
-    // Generate regular stars
-    for (let i = 0; i < CONFIG.STARS.COUNT; i++) {
-        const star = document.createElement('div');
-        star.className = 'star';
-        star.style.left = Math.random() * 100 + '%';
-        star.style.top = Math.random() * 100 + '%';
-        star.style.animationDelay = Math.random() * 3 + 's';
-        
-        // Add variety to stars - different sizes and brightness
-        const size = Math.random() * 3 + 1; // 1-4px
-        const opacity = Math.random() * 0.8 + 0.2; // 0.2-1.0
-        
-        star.style.width = size + 'px';
-        star.style.height = size + 'px';
-        star.style.opacity = opacity;
-        
-        // Some stars twinkle faster
-        if (Math.random() < 0.3) {
-            star.style.animationDuration = (Math.random() * 2 + 1) + 's';
-        }
-        
-        starsContainer.appendChild(star);
-    }
-    
-    // Generate bright stars (fewer, more special)
-    for (let i = 0; i < 25; i++) {
-        const brightStar = document.createElement('div');
-        brightStar.className = 'bright-star';
-        brightStar.style.left = Math.random() * 100 + '%';
-        brightStar.style.top = Math.random() * 100 + '%';
-        brightStar.style.animationDelay = Math.random() * 4 + 's';
-        starsContainer.appendChild(brightStar);
-    }
-    
-    // Generate shooting stars (very few, random timing)
-    for (let i = 0; i < 10; i++) {
-        const shootingStar = document.createElement('div');
-        shootingStar.className = 'shooting-star';
-        shootingStar.style.left = Math.random() * 100 + '%';
-        shootingStar.style.top = Math.random() * 50 + '%'; // Keep in upper half
-        shootingStar.style.animationDelay = Math.random() * 10 + 5 + 's'; // 5-15s delay
-        shootingStar.style.animationDuration = (Math.random() * 2 + 2) + 's'; // 2-4s duration
-        starsContainer.appendChild(shootingStar);
-    }
-}
+import { playSoundEffect, toggleBackgroundMusic, playBackgroundMusic } from './audio.js';
 
 // Update progress display
 export function updateProgress() {
@@ -90,6 +37,7 @@ export function showProjectPanel(project) {
     // Define button handlers inline to ensure proper scope access
     const handleViewDemo = function() {
         console.log('View Demo clicked'); // Debug log
+        playSoundEffect('ui_click');
         if (gameState.currentProject && gameState.currentProject.url) {
             window.open(gameState.currentProject.url, '_blank');
             closeProject();
@@ -100,6 +48,7 @@ export function showProjectPanel(project) {
     
     const handleCloseProject = function() {
         console.log('Continue Exploring clicked'); // Debug log
+        playSoundEffect('ui_click');
         closeProject();
     };
     
@@ -173,6 +122,13 @@ export function startJourney() {
     }
     
     gameState.gameStarted = true;
+    
+    // Start background music when game begins
+    playBackgroundMusic();
+    
+    // Initialize mute button state
+    initializeMuteButton();
+    
     updateProgress(); // Ensure progress is updated when game starts
 }
 
@@ -201,9 +157,27 @@ export function startJourneyWithAnimation() {
 
 // Toggle music
 export function toggleMusic() {
-    gameState.musicEnabled = !gameState.musicEnabled;
-    // Add music toggle logic here
-    console.log('Music', gameState.musicEnabled ? 'enabled' : 'disabled');
+    const enabled = toggleBackgroundMusic();
+    console.log('Music', enabled ? 'enabled' : 'disabled');
+    
+    // Update mute button appearance
+    const muteBtn = document.getElementById('muteBtn');
+    const muteIcon = document.getElementById('muteIcon');
+    const muteText = document.getElementById('muteText');
+    
+    if (muteBtn && muteIcon && muteText) {
+        if (enabled) {
+            // Music is enabled - show volume icon
+            muteBtn.classList.remove('muted');
+            muteIcon.className = 'fa-solid fa-volume-high';
+            muteText.textContent = 'Mute';
+        } else {
+            // Music is disabled - show muted icon
+            muteBtn.classList.add('muted');
+            muteIcon.className = 'fa-solid fa-volume-xmark';
+            muteText.textContent = 'Unmute';
+        }
+    }
 }
 
 // Resize canvas to fit window
@@ -246,6 +220,7 @@ export function resetGameProgress() {
 
 // Confirm reset action
 export function confirmReset() {
+    playSoundEffect('ui_click');
     closeNotificationModal();
     
     const success = resetProgress();
@@ -264,9 +239,6 @@ export function confirmReset() {
         
         // Reset game state
         gameState.gameStarted = false;
-        
-        // Regenerate stars for the landing page
-        generateStars();
         
         // Update progress display
         updateProgress();
@@ -403,6 +375,7 @@ export function showNotification(type, title, message, subtitle = '', buttonText
 
 // Close notification modal
 export function closeNotificationModal() {
+    playSoundEffect('ui_click');
     const notificationModal = document.getElementById('notificationModal');
     if (notificationModal) {
         notificationModal.classList.remove('active');
@@ -420,7 +393,20 @@ export function initializeModalEventListeners() {
             event.stopPropagation();
             closeNotificationModal();
         });
+        
+        // Add hover sound effect
+        closeBtn.addEventListener('mouseenter', () => {
+            playSoundEffect('ui_hover');
+        });
     }
+    
+    // Add hover sound effects to all buttons
+    const buttons = document.querySelectorAll('.notification-btn, .project-btn, .reset-btn, .rocket-btn');
+    buttons.forEach(button => {
+        button.addEventListener('mouseenter', () => {
+            playSoundEffect('ui_hover');
+        });
+    });
     
     // Overlay click to close
     const overlay = document.getElementById('notificationOverlay');
@@ -433,15 +419,33 @@ export function initializeModalEventListeners() {
     }
 }
 
+// Initialize mute button state
+export function initializeMuteButton() {
+    const muteBtn = document.getElementById('muteBtn');
+    const muteIcon = document.getElementById('muteIcon');
+    const muteText = document.getElementById('muteText');
+    
+    if (muteBtn && muteIcon && muteText) {
+        // Set initial state based on game state
+        if (gameState.musicEnabled) {
+            muteBtn.classList.remove('muted');
+            muteIcon.className = 'fa-solid fa-volume-high';
+            muteText.textContent = 'Mute';
+        } else {
+            muteBtn.classList.add('muted');
+            muteIcon.className = 'fa-solid fa-volume-xmark';
+            muteText.textContent = 'Unmute';
+        }
+    }
+}
+
 // Generate stars immediately when the module loads
 document.addEventListener('DOMContentLoaded', () => {
-    generateStars();
     initializeModalEventListeners();
 });
 
 // Also generate stars if DOM is already loaded
 if (document.readyState !== 'loading') {
-    generateStars();
     initializeModalEventListeners();
 }
 
@@ -455,3 +459,4 @@ window.resetGameProgress = resetGameProgress;
 window.confirmReset = confirmReset;
 window.showNotification = showNotification;
 window.closeNotificationModal = closeNotificationModal;
+window.toggleMusic = toggleMusic;

@@ -5,12 +5,9 @@
 // Game configuration constants
 export const CONFIG = {
     ASTRONAUT: {
-        SIZE: 25,
+        SIZE: 22,  // Reduced size for better rocket proportions
         SPEED: 4,
         COLLISION_BUFFER: 10
-    },
-    STARS: {
-        COUNT: 300
     },
     ANIMATION: {
         PULSE_SPEED: 0.08,

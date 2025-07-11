@@ -4,10 +4,11 @@
 
 import { initializeGameState, gameState } from './gameState.js';
 import { loadProgress, autoSave } from './saveLoad.js';
-import { drawAstronaut, drawProjects, clearCanvas } from './renderer.js';
+import { drawAstronaut, drawProjects, clearCanvas, clearDirtyRects, drawBackground, initSpaceCursor, animateSpaceCursor, updateCursorMode } from './renderer.js';
 import { updateAstronaut, checkCollisions, adjustProjectPositions } from './physics.js';
-import { generateStars, resizeCanvas, updateProgress } from './ui.js';
+import { resizeCanvas, updateProgress, initializeModalEventListeners } from './ui.js';
 import { initializeInputHandlers, initializeTouchHandlers } from './input.js';
+import { initializeAudio, playBackgroundMusic } from './audio.js';
 
 // Main game class
 class SpaceOdyssey {
@@ -39,12 +40,18 @@ class SpaceOdyssey {
         // Initialize game state with properly sized canvas
         initializeGameState(this.canvas, this.ctx);
         
-        // Generate background stars
-        generateStars();
+        // Initialize audio system
+        initializeAudio();
         
         // Set up input handlers
         initializeInputHandlers();
         initializeTouchHandlers();
+        
+        // Initialize modal event listeners
+        initializeModalEventListeners();
+        
+        // Initialize custom space cursor
+        initSpaceCursor();
         
         // Handle window resize
         window.addEventListener('resize', () => {
@@ -68,8 +75,14 @@ class SpaceOdyssey {
     }
     
     gameLoop() {
-        // Clear canvas
+        // Clear entire canvas to prevent visual artifacts
         clearCanvas();
+        
+        // Draw the space background
+        drawBackground();
+        
+        // Update cursor mode based on game state
+        updateCursorMode();
         
         // Only update game logic if game has started
         if (gameState.gameStarted) {

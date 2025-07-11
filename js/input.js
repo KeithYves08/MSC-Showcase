@@ -6,15 +6,39 @@ import { gameState } from './gameState.js';
 import { setAstronautTarget } from './physics.js';
 import { toggleMusic } from './ui.js';
 
+// Input optimization variables
+let lastInputTime = 0;
+let inputThrottleDelay = 16; // ~60 FPS throttling
+
 // Initialize input handlers
 export function initializeInputHandlers() {
     const canvas = gameState.canvas;
     
     // Mouse/touch controls for astronaut movement
     canvas.addEventListener('click', handleCanvasClick);
+    canvas.addEventListener('mousemove', handleMouseMove);
     
     // Keyboard controls
     document.addEventListener('keydown', handleKeyDown);
+}
+
+// Throttled mouse move handler for smoother continuous movement
+function handleMouseMove(e) {
+    if (!gameState.gameStarted) return;
+    
+    const currentTime = performance.now();
+    if (currentTime - lastInputTime < inputThrottleDelay) return;
+    
+    lastInputTime = currentTime;
+    
+    // Only move if mouse button is pressed
+    if (e.buttons === 1) {
+        const rect = gameState.canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        setAstronautTarget(x, y);
+    }
 }
 
 // Handle canvas click events
@@ -25,6 +49,7 @@ function handleCanvasClick(e) {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     
+    // Set astronaut target
     setAstronautTarget(x, y);
 }
 

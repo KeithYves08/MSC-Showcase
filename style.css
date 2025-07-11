@@ -9,6 +9,108 @@
             background: #000;
             color: #fff;
             overflow: hidden;
+            cursor: none; /* Hide default cursor */
+        }
+
+        /* Custom Space Odyssey Cursor */
+        .space-cursor {
+            position: fixed;
+            width: 24px;
+            height: 24px;
+            pointer-events: none;
+            z-index: 9999;
+            will-change: transform; /* Hardware acceleration */
+            transition: transform 0.1s ease-out; /* Faster transition */
+        }
+
+        .cursor-outer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 1px solid rgba(0, 188, 242, 0.6);
+            border-radius: 50%;
+            will-change: transform; /* Hardware acceleration */
+            animation: cursorPulse 4s ease-in-out infinite; /* Slower animation */
+        }
+
+        .cursor-inner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 4px;
+            height: 4px;
+            background: #00BCF2;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            will-change: transform; /* Hardware acceleration */
+            box-shadow: 0 0 4px #00BCF2, 0 0 8px #00BCF2; /* Reduced glow */
+        }
+
+        .cursor-trail {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(0, 188, 242, 0.4);
+            border-radius: 50%;
+            pointer-events: none;
+            will-change: transform, opacity; /* Hardware acceleration */
+            animation: trailFade 0.3s ease-out forwards; /* Faster animation */
+        }
+
+        @keyframes cursorPulse {
+            0%, 100% { 
+                transform: scale(1);
+                opacity: 0.7;
+            }
+            50% { 
+                transform: scale(1.05); /* Reduced scale */
+                opacity: 0.4;
+            }
+        }
+
+        @keyframes trailFade {
+            0% { 
+                opacity: 0.4;
+                transform: scale(1);
+            }
+            100% { 
+                opacity: 0;
+                transform: scale(0.1);
+            }
+        }
+
+        /* Cursor hover effects - optimized for performance */
+        .space-cursor.hover {
+            transform: scale(1.1); /* Simpler transform */
+            transition: transform 0.1s ease-out;
+        }
+
+        .space-cursor.hover .cursor-outer {
+            border-color: rgba(0, 120, 212, 0.8);
+            border-width: 2px;
+            animation: none; /* Remove animation on hover */
+        }
+
+        .space-cursor.hover .cursor-inner {
+            background: #0078D4;
+            box-shadow: 0 0 6px #0078D4, 0 0 12px #0078D4; /* Reduced glow */
+        }
+
+        /* Cursor click effects - optimized */
+        .space-cursor.clicking {
+            transform: scale(0.95); /* Simpler transform */
+            transition: transform 0.05s ease-out;
+        }
+
+        .space-cursor.clicking .cursor-outer {
+            border-color: rgba(255, 255, 255, 0.9);
+            border-width: 2px;
+            animation: none; /* Remove animation on click */
+        }
+
+        .space-cursor.clicking .cursor-inner {
+            background: #ffffff;
+            box-shadow: 0 0 8px #ffffff, 0 0 16px #ffffff; /* Reduced glow */
         }
 
         /* Landing Page */
@@ -62,30 +164,46 @@
 
         .rocket-btn {
             border: none;
-            cursor: pointer;
+            cursor: none; /* Hide default cursor for custom cursor */
             position: relative;
             width: 300px;
             height: 80px;
-            background: #0078D4;
+            background: linear-gradient(45deg, #0078D4, #00BCF2);
             transition: all 0.3s ease;
             overflow: visible;
             margin: 2rem auto;
             display: block;
-            border-radius: 50% 50% 50% 0% / 0% 50% 50% 49% ;
+            border-radius: 50% 50% 50% 0% / 0% 50% 50% 50%;
             box-shadow: 0 5px 20px rgba(0, 120, 212, 0.4);
+            /* Add metallic effect */
+            background: linear-gradient(135deg, 
+                #0078D4 0%, 
+                #00BCF2 25%, 
+                #ffffff 50%, 
+                #00BCF2 75%, 
+                #0078D4 100%);
+            background-size: 200% 200%;
+            animation: rocketShine 3s ease-in-out infinite;
+        }
+
+        @keyframes rocketShine {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
         .rocket-btn:before {
             content: '';
             position: absolute;
-            right: -25px;
-            top: 60;
+            right: -8px;
+            top: 9px;
             width: 0;
             height: 0;
-            border-left: 60px solidrgb(223, 63, 35);
+            border-left: 0px solid #ff4757;
             border-top: 30px solid transparent;
-            border-bottom: 35px solid transparent;
+            border-bottom: 30px solid transparent;
             z-index: 2;
+            /* Add flame gradient */
+            filter: drop-shadow(0 0 10px rgba(255, 71, 87, 0.6));
         }
 
         .rocket-btn:after {
@@ -95,9 +213,11 @@
             top: -30px;
             width: 30px;
             height: 30px;
-            background: #fa5111;
+            background: linear-gradient(45deg, #ff4757, #ff6b35);
             transform: skew(60deg, -15deg) rotate(-65deg);
             z-index: 1;
+            border-radius: 20%;
+            box-shadow: 0 2px 8px rgba(255, 71, 87, 0.4);
         }
 
         .rocket-btn .rocket-fin-bottom {
@@ -106,15 +226,32 @@
             bottom: -30px;
             width: 30px;
             height: 30px;
-            background: #fa5111;
+            background: linear-gradient(45deg, #ff4757, #ff6b35);
             transform: skew(-60deg, 15deg) rotate(65deg);
             z-index: 1;
+            border-radius: 20%;
+            box-shadow: 0 2px 8px rgba(255, 71, 87, 0.4);
         }
-        
+
+        /* Add rocket window/porthole */
+        .rocket-btn .rocket-window {
+            position: absolute;
+            left: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(45deg, #87CEEB, #ffffff);
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            z-index: 3;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
 
         .rocket-btn:hover {
-            transform: translateY(-3px) translateX(5px);
-            box-shadow: 0 8px 30px rgba(0, 120, 212, 0.6);
+            transform: translateY(-5px) translateX(8px) scale(1.05);
+            box-shadow: 0 12px 40px rgba(0, 120, 212, 0.8);
+            background-position: 100% 50%;
         }
 
         .rocket-fire {
@@ -127,106 +264,152 @@
             opacity: 0;
             transition: opacity 0.3s ease;
             pointer-events: none;
+            filter: drop-shadow(0 0 15px rgba(255, 107, 53, 0.8));
         }
 
         .fire-particle {
             position: absolute;
             border-radius: 50% 5% 95% 50%;
-            animation: flicker 0.2s ease-in-out infinite alternate;
+            animation: flicker 0.15s ease-in-out infinite alternate;
         }
 
         .fire-1 {
             width: 50px;
             height: 75px;
-            background: radial-gradient(circle, #ff6b35, #f7931e);
+            background: radial-gradient(circle, #ff6b35, #f7931e, #ff4757);
             left: 20px;
             top: -12px;
             animation-delay: 0s;
+            animation-duration: 0.1s;
         }
 
         .fire-2 {
             width: 36px;
             height: 54px;
-            background: radial-gradient(circle, #ff9500, #ffaa00);
+            background: radial-gradient(circle, #ff9500, #ffaa00, #ff6b35);
             left: 20px;
             top: 10px;
-            animation-delay: 0.1s;
+            animation-delay: 0.05s;
+            animation-duration: 0.12s;
         }
 
         .fire-3 {
             width: 20px;
             height: 30px;
-            background: radial-gradient(circle, #ffaa00, #ffcc00);
+            background: radial-gradient(circle, #ffaa00, #ffcc00, #ffffff);
             left: 20px;
             top: 32px;
-            animation-delay: 0.2s;
+            animation-delay: 0.1s;
+            animation-duration: 0.08s;
         }
 
         @keyframes flicker {
             0% { 
-            transform: scale(1) rotate(-3deg) scaleX(0.8);
-            opacity: 0.7;
+                transform: scale(1) rotate(-5deg) scaleX(0.8);
+                opacity: 0.8;
+            }
+            50% { 
+                transform: scale(1.1) rotate(0deg) scaleX(1.2);
+                opacity: 1;
             }
             100% { 
-            transform: scale(1.2) rotate(3deg) scaleX(1.1);
-            opacity: 1;
+                transform: scale(1.3) rotate(5deg) scaleX(0.9);
+                opacity: 0.9;
             }
         }
 
         .rocket-btn:hover .rocket-fire {
             opacity: 1;
+            animation: thrusterPulse 0.3s ease-in-out infinite;
         }
 
-        .rocket-text {
+        @keyframes thrusterPulse {
+            0%, 100% { transform: translateY(-50%) rotate(255deg) scale(1); }
+            50% { transform: translateY(-50%) rotate(255deg) scale(1.1); }
+        }
+
+        /* Add rocket details */
+        .rocket-btn .rocket-text {
             position: relative;
             z-index: 3;
             font-size: 1.1rem;
             font-weight: 600;
             color: white;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
             padding: 0 2rem;
             line-height: 70px;
             text-align: center;
+            letter-spacing: 0.5px;
         }
 
-        /* Launch animation */
+        /* Enhanced Launch animation */
         @keyframes rocketLaunch {
             0% {
-                transform: translateX(0) translateY(0) scale(1);
+                transform: translateX(0) translateY(0) scale(1) rotate(0deg);
+                opacity: 1;
+            }
+            15% {
+                transform: translateX(30px) translateY(-10px) scale(1.02) rotate(2deg);
                 opacity: 1;
             }
             30% {
-                transform: translateX(100px) translateY(0px) scale(0.95);
-                opacity: 0.9;
+                transform: translateX(120px) translateY(-20px) scale(0.98) rotate(5deg);
+                opacity: 0.95;
+            }
+            50% {
+                transform: translateX(250px) translateY(-30px) scale(0.85) rotate(8deg);
+                opacity: 0.8;
             }
             70% {
-                transform: translateX(400px) translateY(0px) scale(0.7);
-                opacity: 0.5;
+                transform: translateX(400px) translateY(-40px) scale(0.7) rotate(12deg);
+                opacity: 0.6;
+            }
+            85% {
+                transform: translateX(600px) translateY(-50px) scale(0.5) rotate(15deg);
+                opacity: 0.3;
             }
             100% {
-                transform: translateX(800px) translateY(0px) scale(0.3);
+                transform: translateX(800px) translateY(-60px) scale(0.3) rotate(20deg);
                 opacity: 0;
             }
         }
 
         .rocket-btn.launching {
-            animation: rocketLaunch .3s ease-out forwards;
+            animation: rocketLaunch 0.8s ease-out forwards;
             pointer-events: none;
         }
 
         .rocket-btn.launching .rocket-fire {
             opacity: 1 !important;
+            animation: launchThruster 0.8s ease-out forwards;
+        }
+
+        @keyframes launchThruster {
+            0% { transform: translateY(-50%) rotate(255deg) scale(1); }
+            50% { transform: translateY(-50%) rotate(255deg) scale(1.5); }
+            100% { transform: translateY(-50%) rotate(255deg) scale(2); }
         }
 
         .rocket-btn.launching .rocket-text {
-            opacity: 0.7;
+            opacity: 0.8;
             transition: opacity 0.3s ease;
+        }
+
+        .rocket-btn.launching .rocket-window {
+            animation: windowGlow 0.8s ease-out forwards;
+        }
+
+        @keyframes windowGlow {
+            0% { box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3); }
+            100% { 
+                box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 
+                           0 0 20px rgba(135, 206, 235, 0.8); 
+            }
         }
 
         /* Game Canvas */
         #gameCanvas {
             display: block;
-            background: radial-gradient(circle at 30% 30%, #1e1b4b 0%, #0f172a 40%, #000 100%);
             cursor: pointer;
         }
 
@@ -430,7 +613,7 @@
             border-radius: 12px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: .7rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -474,122 +657,70 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .landing-title {
-                font-size: 2.5rem;
-            }
-            
-            .progress-bar {
-                top: 10px;
-                left: 10px;
-            }
-            
-            .progress-fill {
-                width: 150px;
-            }
-            
-            .project-panel {
-                max-width: 90%;
-                padding: 1.5rem;
-            }
-
-            .reset-btn {
-                top: 10px;
-                right: 10px;
-                width: 60px;
-                height: 60px;
-                font-size: 1.3rem;
-            }
-        }
-
-        /* Stars Animation */
-        .stars {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 999; /* Just below landing page but visible */
-        }
-
-        .star {
+        /* Mute Button - Top Right (beside reset) */
+        .mute-btn {
             position: absolute;
-            width: 2px;
-            height: 2px;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle 3s ease-in-out infinite;
-            box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
+            top: 20px;
+            right: 120px; /* Position it beside the reset button */
+            width: 90px;
+            height: 45px;
+            background: linear-gradient(135deg, #0078D4, #00BCF2);
+            border: none;
+            color: white;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 120, 212, 0.3);
+            pointer-events: auto;
+            z-index: 200;
+            padding: 0;
         }
 
-        @keyframes twinkle {
-            0%, 100% { 
-                opacity: 0.3; 
-                transform: scale(1);
-            }
-            50% { 
-                opacity: 1; 
-                transform: scale(1.2);
-            }
+        .mute-btn i {
+            margin-right: 0.5rem;
         }
 
-        /* Shooting stars */
-        .shooting-star {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: linear-gradient(45deg, #fff, #00BCF2);
-            border-radius: 50%;
-            opacity: 0;
-            animation: shootingStar 3s linear infinite;
+        .mute-btn:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 25px rgba(0, 120, 212, 0.5);
+            background: linear-gradient(135deg, #005a9e, #0078D4);
         }
 
-        @keyframes shootingStar {
-            0% {
-                opacity: 0;
-                transform: translateX(-100px) translateY(-100px);
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                opacity: 0;
-                transform: translateX(100vw) translateY(100vh);
-            }
+        .mute-btn:active {
+            transform: translateY(0) scale(1.02);
         }
 
-        /* Bright stars */
-        .bright-star {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: radial-gradient(circle, #fff, #00BCF2);
-            border-radius: 50%;
-            animation: brightTwinkle 4s ease-in-out infinite;
-            box-shadow: 0 0 12px rgba(0, 188, 242, 0.8);
+        .mute-btn i {
+            font-size: 1.3rem;
         }
 
-        @keyframes brightTwinkle {
-            0%, 100% { 
-                opacity: 0.6; 
-                transform: scale(1);
-            }
-            25% { 
-                opacity: 1; 
-                transform: scale(1.5);
-            }
-            75% { 
-                opacity: 1; 
-                transform: scale(1.2);
-            }
+        .mute-btn:hover i {
+            animation: pulseVolume 0.6s ease-in-out infinite;
         }
 
-        /* Notification Modal - Project Panel Style */
+        @keyframes pulseVolume {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Muted state */
+        .mute-btn.muted {
+            background: linear-gradient(135deg, #666, #555);
+            box-shadow: 0 4px 15px rgba(102, 102, 102, 0.3);
+        }
+
+        .mute-btn.muted:hover {
+            background: linear-gradient(135deg, #555, #444);
+            box-shadow: 0 6px 25px rgba(102, 102, 102, 0.5);
+        }
+
+        /* Notification Modal - Optimized Animations */
         .notification-modal {
             position: fixed;
             top: 0;
@@ -602,14 +733,17 @@
             justify-content: center;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.2s ease-out, visibility 0.2s ease-out;
+            transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), 
+                       visibility 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
             pointer-events: none;
+            backdrop-filter: blur(0px);
         }
 
         .notification-modal.active {
             opacity: 1;
             visibility: visible;
             pointer-events: auto;
+            backdrop-filter: blur(8px);
         }
 
         .notification-modal-overlay {
@@ -618,9 +752,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
-            animation: overlayFadeIn 0.2s ease-out;
+            background: rgba(0, 0, 0, 0.85);
+            animation: overlayFadeIn 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         @keyframes overlayFadeIn {
@@ -630,40 +763,64 @@
             }
             to {
                 opacity: 1;
-                backdrop-filter: blur(5px);
+                backdrop-filter: blur(8px);
             }
         }
 
         .notification-modal-content {
             position: relative;
-            background: rgba(0, 0, 0, 0.9);
+            background: linear-gradient(135deg, 
+                         rgba(0, 0, 0, 0.95) 0%, 
+                         rgba(0, 120, 212, 0.1) 50%, 
+                         rgba(0, 0, 0, 0.95) 100%);
             border: 2px solid #0078D4;
-            border-radius: 15px;
+            border-radius: 20px;
             padding: 2rem;
-            max-width: 400px;
+            max-width: 420px;
             width: 90%;
             text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 120, 212, 0.3);
-            animation: notificationSlideIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 25px 80px rgba(0, 120, 212, 0.4),
+                       0 10px 30px rgba(0, 0, 0, 0.6),
+                       inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: modalEnter 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
             z-index: 2001;
             transform-origin: center;
+            will-change: transform, opacity;
         }
 
-        @keyframes notificationSlideIn {
+        @keyframes modalEnter {
             0% {
-                transform: translateY(-100px) scale(0.7) rotate(5deg);
+                transform: translateY(-60px) scale(0.8);
                 opacity: 0;
                 filter: blur(10px);
             }
-            50% {
-                transform: translateY(10px) scale(1.02) rotate(-1deg);
-                opacity: 0.8;
-                filter: blur(3px);
+            60% {
+                transform: translateY(8px) scale(1.05);
+                opacity: 0.9;
+                filter: blur(2px);
             }
             100% {
-                transform: translateY(0) scale(1) rotate(0deg);
+                transform: translateY(0) scale(1);
                 opacity: 1;
                 filter: blur(0px);
+            }
+        }
+
+        /* Enhanced modal exit animation */
+        .notification-modal:not(.active) .notification-modal-content {
+            animation: modalExit 0.4s cubic-bezier(0.55, 0.055, 0.675, 0.19) forwards;
+        }
+
+        @keyframes modalExit {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+                filter: blur(0px);
+            }
+            100% {
+                transform: translateY(-60px) scale(0.8);
+                opacity: 0;
+                filter: blur(10px);
             }
         }
 
@@ -672,12 +829,12 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 1rem;
-            animation: headerSlideIn 0.6s ease-out 0.2s both;
+            animation: headerSlideIn 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) 0.1s both;
         }
 
         @keyframes headerSlideIn {
             0% {
-                transform: translateX(-20px);
+                transform: translateX(-30px);
                 opacity: 0;
             }
             100% {
@@ -691,13 +848,13 @@
             margin: 0;
             font-size: 1.5rem;
             font-weight: 600;
-            animation: titleGlow 2s ease-in-out infinite alternate;
+            animation: titleGlow 3s ease-in-out infinite alternate;
         }
 
         .notification-icon {
             font-size: 1.2rem;
             margin-right: 0.5rem;
-            animation: iconPulse 2s ease-in-out infinite;
+            animation: iconPulse 2.5s ease-in-out infinite;
         }
 
         @keyframes iconPulse {
@@ -706,7 +863,7 @@
                 opacity: 0.8;
             }
             50% { 
-                transform: scale(1.1);
+                transform: scale(1.15);
                 opacity: 1;
             }
         }
@@ -719,14 +876,14 @@
             font-size: 1.5rem;
             padding: 0.5rem;
             border-radius: 50%;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             opacity: 0.7;
-            animation: closeButtonFadeIn 0.8s ease-out 0.4s both;
+            animation: closeButtonFadeIn 0.6s ease-out 0.3s both;
         }
 
         @keyframes closeButtonFadeIn {
             0% {
-                transform: rotate(-90deg) scale(0.5);
+                transform: rotate(-180deg) scale(0.5);
                 opacity: 0;
             }
             100% {
@@ -737,19 +894,19 @@
 
         .close-notification-btn:hover {
             opacity: 1;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
             transform: scale(1.2) rotate(90deg);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
         }
 
         .notification-modal-body {
             margin-bottom: 1.5rem;
-            animation: bodySlideUp 0.7s ease-out 0.3s both;
+            animation: bodySlideUp 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) 0.2s both;
         }
 
         @keyframes bodySlideUp {
             0% {
-                transform: translateY(30px);
+                transform: translateY(40px);
                 opacity: 0;
             }
             100% {
@@ -766,7 +923,7 @@
             font-size: 3rem;
             margin-bottom: 1rem;
             display: block;
-            animation: largeIconBounce 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s both;
+            animation: largeIconBounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
         }
 
         @keyframes largeIconBounce {
@@ -774,7 +931,7 @@
                 transform: scale(0) rotate(-180deg);
                 opacity: 0;
             }
-            50% {
+            60% {
                 transform: scale(1.2) rotate(-90deg);
                 opacity: 0.8;
             }
@@ -787,17 +944,19 @@
         .notification-message {
             line-height: 1.6;
             margin-bottom: 0.5rem;
-            animation: messageTypewriter 0.8s ease-out 0.5s both;
+            animation: messageSlideIn 0.5s ease-out 0.4s both;
         }
 
-        @keyframes messageTypewriter {
+        @keyframes messageSlideIn {
             0% {
-                width: 0;
+                transform: translateY(20px);
                 opacity: 0;
             }
-            50% {
+            100% {
+                transform: translateY(0);
                 opacity: 1;
             }
+        }
             100% {
                 width: 100%;
                 opacity: 1;
@@ -808,12 +967,12 @@
             font-size: 0.9rem;
             opacity: 0.8;
             line-height: 1.4;
-            animation: subtitleFadeIn 0.6s ease-out 0.7s both;
+            animation: subtitleFadeIn 0.5s ease-out 0.5s both;
         }
 
         @keyframes subtitleFadeIn {
             0% {
-                transform: translateY(10px);
+                transform: translateY(15px);
                 opacity: 0;
             }
             100% {
@@ -827,12 +986,12 @@
             gap: 1rem;
             justify-content: center;
             flex-wrap: wrap;
-            animation: footerSlideIn 0.6s ease-out 0.8s both;
+            animation: footerSlideIn 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) 0.5s both;
         }
 
         @keyframes footerSlideIn {
             0% {
-                transform: translateY(40px);
+                transform: translateY(30px);
                 opacity: 0;
             }
             100% {
@@ -842,18 +1001,33 @@
         }
 
         .notification-btn {
+            background: linear-gradient(45deg, #0078D4, #00BCF2);
+            color: white;
             padding: 0.8rem 1.5rem;
             border: none;
             border-radius: 25px;
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             margin: 0;
             position: relative;
             overflow: hidden;
+            will-change: transform;
+            animation: buttonSlideIn 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) 0.6s both;
+        }
+
+        @keyframes buttonSlideIn {
+            0% {
+                transform: translateY(20px) scale(0.9);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
         }
 
         .notification-btn::before {
@@ -863,42 +1037,50 @@
             left: 50%;
             width: 0;
             height: 0;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.25);
             border-radius: 50%;
-            transition: all 0.6s ease;
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
             transform: translate(-50%, -50%);
         }
 
         .notification-btn:hover::before {
-            width: 300px;
-            height: 300px;
+            width: 250px;
+            height: 250px;
         }
 
         .notification-btn:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 10px 25px rgba(0, 120, 212, 0.4);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(0, 120, 212, 0.4),
+                       0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .notification-btn:active {
-            transform: translateY(-2px) scale(0.98);
+            transform: translateY(-1px) scale(0.98);
             transition: all 0.1s ease;
         }
 
-        /* Enhanced modal exit animation */
-        .notification-modal:not(.active) .notification-modal-content {
-            animation: notificationSlideOut 0.4s cubic-bezier(0.55, 0.055, 0.675, 0.19) forwards;
+        /* Performance optimizations for modal animations */
+        .notification-modal-content,
+        .notification-modal-overlay,
+        .notification-btn,
+        .close-notification-btn {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000px;
         }
 
-        @keyframes notificationSlideOut {
-            0% {
-                transform: translateY(0) scale(1) rotate(0deg);
-                opacity: 1;
-                filter: blur(0px);
-            }
-            100% {
-                transform: translateY(-100px) scale(0.7) rotate(-5deg);
-                opacity: 0;
-                filter: blur(10px);
+        /* Reduced motion support for accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            .notification-modal,
+            .notification-modal-content,
+            .notification-modal-header,
+            .notification-modal_body,
+            .notification-modal-footer,
+            .notification-btn,
+            .close-notification-btn {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
             }
         }
 
@@ -1268,6 +1450,7 @@
             box-shadow: 0 5px 15px rgba(39, 174, 96, 0.5);
         }
 
+        /* Error Modal */
         .notification-modal.error .notification-modal-content {
             border-color: #e74c3c;
             box-shadow: 0 20px 60px rgba(231, 76, 60, 0.3);
@@ -1353,3 +1536,47 @@
                 justify-content: center;
             }
         }
+
+        /* Click ripple effect */
+        .click-ripple {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .click-ripple::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            animation: clickRipple 0.6s ease-out forwards;
+        }
+
+        @keyframes clickRipple {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.5); /* Reduced scale */
+                opacity: 0;
+            }
+        }
+
+        /* Space-themed cursor variations - optimized */
+        .space-cursor.rocket-mode .cursor-outer {
+            border-color: rgba(255, 107, 0, 0.6);
+            animation: none; /* Remove animation in rocket mode for better performance */
+        }
+
+        .space-cursor.rocket-mode .cursor-inner {
+            background: #ff6b00;
+            box-shadow: 0 0 4px #ff6b00, 0 0 8px #ff6b00; /* Reduced glow */
+        }
+
+        /* ...existing code... */

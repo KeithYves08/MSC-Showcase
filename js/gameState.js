@@ -13,7 +13,8 @@ export const gameState = {
         targetY: 0,
         size: CONFIG.ASTRONAUT.SIZE,
         speed: CONFIG.ASTRONAUT.SPEED,
-        angle: 0
+        angle: 0,
+        isMoving: false
     },
     projects: [],
     discoveredProjects: new Set(),
@@ -21,7 +22,8 @@ export const gameState = {
     recentlyClosedProject: null, // Track recently closed project to prevent immediate reopening
     projectPanelTimer: null, // Timer for auto-closing project panel
     particles: [],
-    stars: []
+    rocketTrails: [],
+    smokeTrails: []
 };
 
 // Initialize game state
@@ -71,4 +73,10 @@ export function getDiscoveryProgress() {
     const discovered = gameState.discoveredProjects.size;
     const total = gameState.projects.length;
     return { discovered, total, percentage: (discovered / total) * 100 };
+}
+
+// Clear all trails (for performance and cleanup)
+export function clearAllTrails() {
+    gameState.rocketTrails = [];
+    gameState.smokeTrails = [];
 }

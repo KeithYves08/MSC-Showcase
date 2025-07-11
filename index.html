@@ -21,6 +21,7 @@
             <p class="landing-subtitle">#AchieveMore</p>
             <button class="rocket-btn" onclick="startJourneyWithAnimation()">
                 <div class="rocket-fin-bottom"></div>
+                <div class="rocket-window"></div>
                 <div class="rocket-fire">
                     <div class="fire-particle fire-1"></div>
                     <div class="fire-particle fire-2"></div>
@@ -31,8 +32,11 @@
         </div>
     </div>
 
-    <!-- Stars Background -->
-    <div class="stars" id="stars"></div>
+    <!-- Custom Space Odyssey Cursor -->
+    <div class="space-cursor" id="spaceCursor">
+        <div class="cursor-outer"></div>
+        <div class="cursor-inner"></div>
+    </div>
 
     <!-- Game Canvas -->
     <canvas id="gameCanvas"></canvas>
@@ -75,14 +79,19 @@
             <div class="controls-title">Controls</div>
             <div>Click to move astronaut</div>
             <div>Approach planets to discover</div>
-            <div>Press M to toggle music</div>
-            <div>Ctrl+R to reset progress</div>
+            <div>M to mute the music</div>
         </div>
 
         <!-- Reset Button -->
         <button class="reset-btn" onclick="resetGameProgress()">
             <i class="fa-solid fa-arrows-rotate" style="color: #ffffff;"></i>
             <span class="reset-text">Reset</span>
+        </button>
+
+        <!-- Mute Button -->
+        <button class="mute-btn" onclick="toggleMusic()" id="muteBtn">
+            <i class="fa-solid fa-volume-high" style="color: #ffffff;" id="muteIcon"></i>
+            <span class="mute-text" id="muteText">Mute</span>
         </button>
     </div>
 

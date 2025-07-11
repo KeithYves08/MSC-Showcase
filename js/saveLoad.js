@@ -3,8 +3,9 @@
 // ===================================================================
 
 import { CONFIG } from './config.js';
-import { gameState } from './gameState.js';
+import { gameState, clearAllTrails } from './gameState.js';
 import { updateProgress } from './ui.js';
+import { stopThrustSound } from './audio.js';
 
 // Load saved progress from localStorage
 export function loadProgress() {
@@ -74,12 +75,19 @@ export function autoSave() {
 // Reset all progress and restart the game
 export function resetProgress() {
     try {
+        // Stop any playing sounds
+        stopThrustSound();
+        
         // Clear localStorage
         localStorage.removeItem(CONFIG.STORAGE_KEY);
         
         // Reset game state
         gameState.discoveredProjects.clear();
         gameState.currentProject = null;
+        gameState.gameStarted = false;
+        
+        // Clear all trails
+        clearAllTrails();
         
         // Reset all projects to undiscovered
         gameState.projects.forEach(project => {
