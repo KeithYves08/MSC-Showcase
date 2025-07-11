@@ -460,7 +460,7 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%) scale(0.9);
             background: rgba(0, 0, 0, 0.9);
             border: 2px solid #0078D4;
             border-radius: 15px;
@@ -470,12 +470,15 @@
             pointer-events: auto;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s ease;
+            transition: transform 0.2s ease-out, opacity 0.2s ease-out, visibility 0.2s ease-out;
+            will-change: transform, opacity;
+            contain: layout style paint;
         }
 
         .project-panel.active {
             opacity: 1;
             visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
         }
 
         .project-panel h3 {
@@ -720,7 +723,7 @@
             box-shadow: 0 6px 25px rgba(102, 102, 102, 0.5);
         }
 
-        /* Notification Modal - Optimized Animations */
+        /* Notification Modal - High Performance Animations */
         .notification-modal {
             position: fixed;
             top: 0;
@@ -733,17 +736,16 @@
             justify-content: center;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), 
-                       visibility 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: opacity 0.2s ease-out, visibility 0.2s ease-out;
             pointer-events: none;
-            backdrop-filter: blur(0px);
+            will-change: opacity, visibility;
+            contain: layout style paint;
         }
 
         .notification-modal.active {
             opacity: 1;
             visibility: visible;
             pointer-events: auto;
-            backdrop-filter: blur(8px);
         }
 
         .notification-modal-overlay {
@@ -753,18 +755,8 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.85);
-            animation: overlayFadeIn 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-
-        @keyframes overlayFadeIn {
-            from {
-                opacity: 0;
-                backdrop-filter: blur(0px);
-            }
-            to {
-                opacity: 1;
-                backdrop-filter: blur(8px);
-            }
+            will-change: opacity;
+            contain: layout style paint;
         }
 
         .notification-modal-content {
@@ -782,42 +774,25 @@
             box-shadow: 0 25px 80px rgba(0, 120, 212, 0.4),
                        0 10px 30px rgba(0, 0, 0, 0.6),
                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            animation: modalEnter 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform: translateY(-30px) scale(0.9);
+            opacity: 0;
+            transition: transform 0.2s ease-out, opacity 0.2s ease-out;
             z-index: 2001;
-            transform-origin: center;
             will-change: transform, opacity;
+            contain: layout style paint;
         }
 
-        @keyframes modalEnter {
-            0% {
-                transform: translateY(-60px) scale(0.8);
-                opacity: 0;
-                filter: blur(10px);
-            }
-            60% {
-                transform: translateY(8px) scale(1.05);
-                opacity: 0.9;
-                filter: blur(2px);
-            }
-            100% {
-                transform: translateY(0) scale(1);
-                opacity: 1;
-                filter: blur(0px);
-            }
+        .notification-modal.active .notification-modal-content {
+            transform: translateY(0) scale(1);
+            opacity: 1;
         }
 
         /* Enhanced modal exit animation */
         .notification-modal:not(.active) .notification-modal-content {
-            animation: modalExit 0.4s cubic-bezier(0.55, 0.055, 0.675, 0.19) forwards;
+            transform: translateY(-30px) scale(0.9);
+            opacity: 0;
+            transition: transform 0.15s ease-in, opacity 0.15s ease-in;
         }
-
-        @keyframes modalExit {
-            0% {
-                transform: translateY(0) scale(1);
-                opacity: 1;
-                filter: blur(0px);
-            }
-            100% {
                 transform: translateY(-60px) scale(0.8);
                 opacity: 0;
                 filter: blur(10px);
@@ -1059,7 +1034,7 @@
             transition: all 0.1s ease;
         }
 
-        /* Performance optimizations for modal animations */
+        /* High Performance optimizations for modal animations */
         .notification-modal-content,
         .notification-modal-overlay,
         .notification-btn,
@@ -1067,6 +1042,14 @@
             transform: translateZ(0);
             backface-visibility: hidden;
             perspective: 1000px;
+            will-change: transform, opacity;
+            contain: layout style paint;
+        }
+
+        /* Use GPU acceleration for smooth animations */
+        .notification-modal.active .notification-modal-content,
+        .notification-modal.active .notification-modal-overlay {
+            transform: translateZ(0);
         }
 
         /* Reduced motion support for accessibility */
@@ -1074,7 +1057,7 @@
             .notification-modal,
             .notification-modal-content,
             .notification-modal-header,
-            .notification-modal_body,
+            .notification-modal-body,
             .notification-modal-footer,
             .notification-btn,
             .close-notification-btn {
