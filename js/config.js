@@ -144,7 +144,7 @@ export const PROJECT_DATA = [
         id: 12,
         name: "Hiraya: Awakened",
         description: "Souls-like action RPG game made entirely in Scratch. Embark on a journey to defeat the evil creatures of the Philippine mythology.",
-        url: "../HirayaAwakened.html",
+        url: "https://kairusouls.itch.io/hiraya-awakened",
         x: 1400,
         y: 200,
         size: 45,
