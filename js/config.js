@@ -6,7 +6,7 @@
 export const CONFIG = {
     ASTRONAUT: {
         SIZE: 30,  // Reduced size for better rocket proportions
-        SPEED: 4,
+        SPEED: 8,
         COLLISION_BUFFER: 10
     },
     ANIMATION: {
@@ -138,6 +138,18 @@ export const PROJECT_DATA = [
         size: 28,
         color: "#00BCF2",
         type: "cloud"
+    },
+    {
+        // Hiraya Awakened Game (Scratch project)
+        id: 12,
+        name: "Hiraya: Awakened",
+        description: "Souls-like action RPG game made entirely in Scratch. Embark on a journey to defeat the evil creatures of the Philippine mythology.",
+        url: "../HirayaAwakened.html",
+        x: 1400,
+        y: 200,
+        size: 45,
+        color: "#5C2D91",
+        type: "hiraya"
     }
 ];
 
@@ -164,5 +176,6 @@ export const PROJECT_ICONS = {
     audio: '🎵',
     cloud: '☁️',
     qr: '📱',
+    hiraya: '🌅', // Custom icon for Hiraya Awakened Game
     default: '🌍'
 };
