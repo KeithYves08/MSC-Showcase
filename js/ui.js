@@ -5,7 +5,7 @@
 import { gameState, getDiscoveryProgress } from './gameState.js';
 import { CONFIG } from './config.js';
 import { resetProgress } from './saveLoad.js';
-import { playSoundEffect, toggleBackgroundMusic, playBackgroundMusic } from './audio.js';
+import { toggleBackgroundMusic, playBackgroundMusic } from './audio.js';
 
 // Update progress display
 export function updateProgress() {
@@ -37,7 +37,6 @@ export function showProjectPanel(project) {
     // Define button handlers inline to ensure proper scope access
     const handleViewDemo = function() {
         console.log('View Demo clicked'); // Debug log
-        playSoundEffect('ui_click');
         if (gameState.currentProject && gameState.currentProject.url) {
             window.open(gameState.currentProject.url, '_blank');
             closeProject();
@@ -48,7 +47,6 @@ export function showProjectPanel(project) {
     
     const handleCloseProject = function() {
         console.log('Continue Exploring clicked'); // Debug log
-        playSoundEffect('ui_click');
         closeProject();
     };
     
@@ -225,7 +223,6 @@ export function resetGameProgress() {
 
 // Confirm reset action
 export function confirmReset() {
-    playSoundEffect('ui_click');
     closeNotificationModal();
     
     const success = resetProgress();
@@ -380,7 +377,6 @@ export function showNotification(type, title, message, subtitle = '', buttonText
 
 // Close notification modal
 export function closeNotificationModal() {
-    playSoundEffect('ui_click');
     const notificationModal = document.getElementById('notificationModal');
     if (notificationModal) {
         notificationModal.classList.remove('active');
@@ -398,20 +394,7 @@ export function initializeModalEventListeners() {
             event.stopPropagation();
             closeNotificationModal();
         });
-        
-        // Add hover sound effect
-        closeBtn.addEventListener('mouseenter', () => {
-            playSoundEffect('ui_hover');
-        });
     }
-    
-    // Add hover sound effects to all buttons
-    const buttons = document.querySelectorAll('.notification-btn, .project-btn, .reset-btn, .rocket-btn');
-    buttons.forEach(button => {
-        button.addEventListener('mouseenter', () => {
-            playSoundEffect('ui_hover');
-        });
-    });
     
     // Overlay click to close
     const overlay = document.getElementById('notificationOverlay');

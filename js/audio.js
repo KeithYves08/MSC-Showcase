@@ -6,10 +6,11 @@ import { gameState } from './gameState.js';
 
 // Audio configuration
 const AUDIO_CONFIG = {
-    BGM_VOLUME: 0.2, // Reduced volume
-    SFX_VOLUME: 0.4, // Reduced volume
-    FADE_DURATION: 1000,
-    SAMPLE_RATE_REDUCTION: 0.5 // Reduce sample rate for better performance
+    BGM_VOLUME: 0.15, // Optimized volume
+    SFX_VOLUME: 0.3, // Optimized volume
+    FADE_DURATION: 500, // Faster fade for better performance
+    BGM_DURATION: 30, // Shorter loop for better performance
+    SAMPLE_RATE_FACTOR: 0.7 // Reduce sample rate for better performance
 };
 
 // Audio context and sources
@@ -64,69 +65,40 @@ function generateProceduralAudio() {
     generateSoundEffects();
 }
 
-// Generate space odyssey background music
+// Generate space odyssey background music (optimized)
 function generateAmbientBGM() {
-    const duration = 60; // 60 seconds loop for more epic feel
-    const sampleRate = audioContext.sampleRate;
+    const duration = AUDIO_CONFIG.BGM_DURATION; // Shorter duration for better performance
+    const sampleRate = audioContext.sampleRate * AUDIO_CONFIG.SAMPLE_RATE_FACTOR;
     const length = duration * sampleRate;
     
     const buffer = audioContext.createBuffer(2, length, sampleRate);
     const leftChannel = buffer.getChannelData(0);
     const rightChannel = buffer.getChannelData(1);
     
-    // Generate epic space odyssey music
+    // Optimized epic space odyssey music with reduced complexity
     for (let i = 0; i < length; i++) {
         const time = i / sampleRate;
         
-        // Deep orchestral bass foundation
-        const bassFreq = 44 + Math.sin(time * 0.05) * 8 + Math.sin(time * 0.13) * 4;
-        const bass = Math.sin(time * 2 * Math.PI * bassFreq) * 0.18 * 
-                    (0.7 + 0.3 * Math.sin(time * 0.1));
+        // Simplified bass foundation
+        const bassFreq = 44 + Math.sin(time * 0.1) * 6;
+        const bass = Math.sin(time * 2 * Math.PI * bassFreq) * 0.15;
         
-        // Majestic brass-like melody (inspired by "Also sprach Zarathustra")
-        const phase = time * 0.25;
-        const melodyPhase = Math.floor(phase) % 4;
-        let melodyFreq = 220;
+        // Simplified melody
+        const phase = time * 0.3;
+        const melodyPhase = Math.floor(phase) % 3;
+        const melodyFreq = melodyPhase === 0 ? 220 : melodyPhase === 1 ? 330 : 440;
+        const melody = Math.sin(time * 2 * Math.PI * melodyFreq) * 0.1 * Math.sin(time * 0.4);
         
-        if (melodyPhase === 0) melodyFreq = 220; // C
-        else if (melodyPhase === 1) melodyFreq = 330; // E
-        else if (melodyPhase === 2) melodyFreq = 440; // A
-        else melodyFreq = 220; // C octave
+        // Simplified strings
+        const stringFreq = 110 + Math.sin(time * 0.2) * 15;
+        const strings = Math.sin(time * 2 * Math.PI * stringFreq) * 0.06 * Math.sin(time * 0.5);
         
-        const melody = Math.sin(time * 2 * Math.PI * melodyFreq) * 0.12 * 
-                      Math.sin(time * 0.3) * (0.8 + 0.2 * Math.sin(time * 1.2));
+        // Ambient wind (reduced complexity)
+        const wind = (Math.random() - 0.5) * 0.02 * Math.sin(time * 0.08);
         
-        // Harmonic overtones for richness
-        const harmonic1 = Math.sin(time * 2 * Math.PI * melodyFreq * 1.5) * 0.04;
-        const harmonic2 = Math.sin(time * 2 * Math.PI * melodyFreq * 2) * 0.03;
-        
-        // Cosmic strings section
-        const stringFreq = 110 + Math.sin(time * 0.2) * 20;
-        const strings = Math.sin(time * 2 * Math.PI * stringFreq) * 0.08 * 
-                       Math.sin(time * 0.4) * Math.sin(time * 0.07);
-        
-        // Ethereal choir-like pad
-        const padFreq = 330 + Math.sin(time * 0.15) * 40;
-        const pad = Math.sin(time * 2 * Math.PI * padFreq) * 0.06 * 
-                   Math.sin(time * 0.6) * Math.sin(time * 0.09);
-        
-        // Cosmic wind and space ambience
-        const wind1 = (Math.random() - 0.5) * 0.025 * Math.sin(time * 0.06);
-        const wind2 = (Math.random() - 0.5) * 0.015 * Math.sin(time * 0.11);
-        
-        // Distant stellar echoes
-        const echo = Math.sin(time * 2 * Math.PI * 880) * 0.03 * 
-                    Math.sin(time * 0.18) * Math.sin(time * 0.8);
-        
-        // Subtle timpani-like percussion for drama
-        const timeDivision = Math.floor(time * 0.5) % 8;
-        const perc = Math.sin(time * 2 * Math.PI * 60) * 0.1 * 
-                    (timeDivision === 0 || timeDivision === 4 ? Math.exp(-((time * 0.5) % 1) * 6) : 0);
-        
-        const sample = bass + melody + harmonic1 + harmonic2 + strings + pad + wind1 + wind2 + echo + perc;
+        const sample = bass + melody + strings + wind;
         leftChannel[i] = sample;
-        rightChannel[i] = sample * 0.92 + strings * 0.15 + wind2 * 0.08;
-
+        rightChannel[i] = sample * 0.9 + wind * 0.1;
     }
     
     audioBuffers.set('bgm', buffer);
@@ -136,19 +108,12 @@ function generateAmbientBGM() {
 function generateSoundEffects() {
     // Rocket thrust sound
     generateRocketThrust();
-    
-    // Planet discovery sound
-    generatePlanetDiscovery();
-    
-    // UI interaction sounds
-    generateUIClick();
-    generateUIHover();
 }
 
-// Generate rocket thrust sound effect
+// Generate rocket thrust sound effect (optimized)
 function generateRocketThrust() {
-    const duration = 0.5; // Shorter for looping
-    const sampleRate = audioContext.sampleRate;
+    const duration = 0.4; // Shorter for better performance
+    const sampleRate = audioContext.sampleRate * AUDIO_CONFIG.SAMPLE_RATE_FACTOR;
     const length = duration * sampleRate;
     
     const buffer = audioContext.createBuffer(1, length, sampleRate);
@@ -156,95 +121,34 @@ function generateRocketThrust() {
     
     for (let i = 0; i < length; i++) {
         const time = i / sampleRate;
-        const noise = (Math.random() - 0.5) * 2;
-        const envelope = 1; // Constant volume for looping
-        const lowFreq = Math.sin(time * 2 * Math.PI * 120) * 0.4;
-        const midFreq = Math.sin(time * 2 * Math.PI * 200) * 0.2;
-        const highFreq = noise * 0.3;
+        const noise = (Math.random() - 0.5) * 0.6; // Reduced noise
+        const lowFreq = Math.sin(time * 2 * Math.PI * 110) * 0.3;
+        const midFreq = Math.sin(time * 2 * Math.PI * 180) * 0.15;
         
-        channelData[i] = (lowFreq + midFreq + highFreq) * envelope * 0.3;
+        channelData[i] = (lowFreq + midFreq + noise) * 0.25;
     }
     
     audioBuffers.set('rocket_thrust', buffer);
     
-    // Generate continuous thrust sound
-    const contDuration = 1;
+    // Optimized continuous thrust sound
+    const contDuration = 0.8; // Shorter loop
     const contLength = contDuration * sampleRate;
     const contBuffer = audioContext.createBuffer(1, contLength, sampleRate);
     const contChannelData = contBuffer.getChannelData(0);
     
     for (let i = 0; i < contLength; i++) {
         const time = i / sampleRate;
-        const noise = (Math.random() - 0.5) * 2;
-        const lowFreq = Math.sin(time * 2 * Math.PI * 100) * 0.3;
-        const modulation = Math.sin(time * 2 * Math.PI * 8) * 0.1 + 0.9;
+        const noise = (Math.random() - 0.5) * 0.4; // Reduced noise
+        const lowFreq = Math.sin(time * 2 * Math.PI * 95) * 0.25;
+        const modulation = Math.sin(time * 2 * Math.PI * 6) * 0.08 + 0.92;
         
-        contChannelData[i] = (noise * 0.2 + lowFreq) * modulation * 0.25;
+        contChannelData[i] = (noise * 0.15 + lowFreq) * modulation * 0.2;
     }
     
     audioBuffers.set('rocket_thrust_loop', contBuffer);
 }
 
-// Generate planet discovery sound
-function generatePlanetDiscovery() {
-    const duration = 2;
-    const sampleRate = audioContext.sampleRate;
-    const length = duration * sampleRate;
-    
-    const buffer = audioContext.createBuffer(1, length, sampleRate);
-    const channelData = buffer.getChannelData(0);
-    
-    for (let i = 0; i < length; i++) {
-        const time = i / sampleRate;
-        const frequency = 440 + Math.sin(time * 8) * 100;
-        const envelope = Math.exp(-time * 0.8);
-        const harmonic = Math.sin(time * 2 * Math.PI * frequency * 1.5) * 0.3;
-        
-        channelData[i] = (Math.sin(time * 2 * Math.PI * frequency) + harmonic) * envelope * 0.2;
-    }
-    
-    audioBuffers.set('planet_discovery', buffer);
-}
-
-// Generate UI click sound
-function generateUIClick() {
-    const duration = 0.1;
-    const sampleRate = audioContext.sampleRate;
-    const length = duration * sampleRate;
-    
-    const buffer = audioContext.createBuffer(1, length, sampleRate);
-    const channelData = buffer.getChannelData(0);
-    
-    for (let i = 0; i < length; i++) {
-        const time = i / sampleRate;
-        const envelope = Math.exp(-time * 30);
-        
-        channelData[i] = Math.sin(time * 2 * Math.PI * 800) * envelope * 0.3;
-    }
-    
-    audioBuffers.set('ui_click', buffer);
-}
-
-// Generate UI hover sound
-function generateUIHover() {
-    const duration = 0.05;
-    const sampleRate = audioContext.sampleRate;
-    const length = duration * sampleRate;
-    
-    const buffer = audioContext.createBuffer(1, length, sampleRate);
-    const channelData = buffer.getChannelData(0);
-    
-    for (let i = 0; i < length; i++) {
-        const time = i / sampleRate;
-        const envelope = Math.exp(-time * 20);
-        
-        channelData[i] = Math.sin(time * 2 * Math.PI * 1200) * envelope * 0.1;
-    }
-    
-    audioBuffers.set('ui_hover', buffer);
-}
-
-// Play background music
+// Play background music (optimized)
 export function playBackgroundMusic() {
     if (!audioContext || !audioBuffers.has('bgm') || !gameState.musicEnabled) return;
     
@@ -266,16 +170,26 @@ export function playBackgroundMusic() {
         bgmSource.connect(bgmGain);
         bgmSource.start();
         
+        // Add error handling
+        bgmSource.onerror = () => {
+            console.warn('BGM playback error');
+            bgmSource = null;
+        };
+        
         console.log('Background music started');
     } catch (error) {
         console.warn('Failed to play background music:', error);
     }
 }
 
-// Stop background music
+// Stop background music (optimized)
 export function stopBackgroundMusic() {
     if (bgmSource) {
-        bgmSource.stop();
+        try {
+            bgmSource.stop();
+        } catch (error) {
+            // Ignore errors when stopping
+        }
         bgmSource = null;
     }
 }
@@ -318,9 +232,18 @@ export function stopThrustSound() {
     }
 }
 
-// Play sound effect
+// Play sound effect (optimized with throttling)
+const soundEffectThrottle = new Map();
+
 export function playSoundEffect(soundName) {
     if (!audioContext || !audioBuffers.has(soundName)) return;
+    
+    // Throttle sound effects to prevent spam
+    const now = Date.now();
+    const lastPlayed = soundEffectThrottle.get(soundName) || 0;
+    const throttleTime = 100; // Standard throttling for all sounds
+    
+    if (now - lastPlayed < throttleTime) return;
     
     try {
         // Resume audio context if suspended
@@ -333,9 +256,15 @@ export function playSoundEffect(soundName) {
         source.connect(sfxGain);
         source.start();
         
+        soundEffectThrottle.set(soundName, now);
+        
         // Clean up after sound finishes
         source.onended = () => {
-            source.disconnect();
+            try {
+                source.disconnect();
+            } catch (error) {
+                // Ignore disconnect errors
+            }
         };
         
     } catch (error) {
@@ -386,23 +315,44 @@ export function getVolume(type) {
     }
 }
 
-// Cleanup audio resources
+// Cleanup audio resources (optimized)
 export function cleanupAudio() {
+    // Stop all audio sources
     if (bgmSource) {
-        bgmSource.stop();
+        try {
+            bgmSource.stop();
+        } catch (error) {
+            // Ignore errors
+        }
         bgmSource = null;
     }
     
     if (thrustSource) {
-        thrustSource.stop();
+        try {
+            thrustSource.stop();
+        } catch (error) {
+            // Ignore errors
+        }
         thrustSource = null;
     }
     
-    if (audioContext) {
-        audioContext.close();
+    // Clear throttle map
+    soundEffectThrottle.clear();
+    
+    // Clean up audio context
+    if (audioContext && audioContext.state !== 'closed') {
+        try {
+            audioContext.close();
+        } catch (error) {
+            console.warn('Error closing audio context:', error);
+        }
         audioContext = null;
     }
     
+    // Clear buffers and sources
     audioBuffers.clear();
     audioSources.clear();
+    
+    // Reset initialization flag
+    isAudioInitialized = false;
 }
