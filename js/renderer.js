@@ -17,7 +17,7 @@ let woozaImage = null;
 const loadWoozaImage = () => {
     if (!woozaImage) {
         woozaImage = new Image();
-        woozaImage.src = 'assets/wooza.png';
+        woozaImage.src = 'assets/wooza.webp';
         woozaImage.onload = () => {
             console.log('Wooza image loaded successfully');
         };

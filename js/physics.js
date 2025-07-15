@@ -6,7 +6,7 @@ import { gameState, areAllRegularPlanetsDiscovered, addQRPlanet } from './gameSt
 import { CONFIG } from './config.js';
 import { saveProgress } from './saveLoad.js';
 import { updateProgress } from './ui.js';
-import { playSoundEffect, startThrustSound, stopThrustSound } from './audio.js';
+import { startThrustSound, stopThrustSound } from './audio.js';
 
 // Check for collisions between astronaut and planets
 export function checkCollisions() {
@@ -47,9 +47,6 @@ export function checkCollisions() {
             if (!project.discovered) {
                 project.discovered = true;
                 gameState.discoveredProjects.add(project.id);
-                
-                // Play planet discovery sound
-                playSoundEffect('planet_discovery');
                 
                 saveProgress();
                 updateProgress(); // Update progress bar immediately

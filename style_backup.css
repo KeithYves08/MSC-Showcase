@@ -20,8 +20,8 @@
             height: 24px;
             pointer-events: none;
             z-index: 9999;
-            will-change: transform;
-            transition: transform 0.1s ease-out;
+            will-change: transform; /* Hardware acceleration */
+            transition: transform 0.1s ease-out; /* Faster transition */
         }
 
         .cursor-outer {
@@ -30,8 +30,8 @@
             height: 100%;
             border: 1px solid rgba(0, 188, 242, 0.6);
             border-radius: 50%;
-            will-change: transform;
-            animation: cursorPulse 4s ease-in-out infinite;
+            will-change: transform; /* Hardware acceleration */
+            animation: cursorPulse 4s ease-in-out infinite; /* Slower animation */
         }
 
         .cursor-inner {
@@ -43,8 +43,8 @@
             background: #00BCF2;
             border-radius: 50%;
             transform: translate(-50%, -50%);
-            will-change: transform;
-            box-shadow: 0 0 4px #00BCF2, 0 0 8px #00BCF2;
+            will-change: transform; /* Hardware acceleration */
+            box-shadow: 0 0 4px #00BCF2, 0 0 8px #00BCF2; /* Reduced glow */
         }
 
         .cursor-trail {
@@ -54,8 +54,8 @@
             background: rgba(0, 188, 242, 0.4);
             border-radius: 50%;
             pointer-events: none;
-            will-change: transform, opacity;
-            animation: trailFade 0.3s ease-out forwards;
+            will-change: transform, opacity; /* Hardware acceleration */
+            animation: trailFade 0.3s ease-out forwards; /* Faster animation */
         }
 
         @keyframes cursorPulse {
@@ -64,7 +64,7 @@
                 opacity: 0.7;
             }
             50% { 
-                transform: scale(1.05);
+                transform: scale(1.05); /* Reduced scale */
                 opacity: 0.4;
             }
         }
@@ -80,38 +80,38 @@
             }
         }
 
-        /* Cursor hover effects */
+        /* Cursor hover effects - optimized for performance */
         .space-cursor.hover {
-            transform: scale(1.1);
+            transform: scale(1.1); /* Simpler transform */
             transition: transform 0.1s ease-out;
         }
 
         .space-cursor.hover .cursor-outer {
             border-color: rgba(0, 120, 212, 0.8);
             border-width: 2px;
-            animation: none;
+            animation: none; /* Remove animation on hover */
         }
 
         .space-cursor.hover .cursor-inner {
             background: #0078D4;
-            box-shadow: 0 0 6px #0078D4, 0 0 12px #0078D4;
+            box-shadow: 0 0 6px #0078D4, 0 0 12px #0078D4; /* Reduced glow */
         }
 
-        /* Cursor click effects */
+        /* Cursor click effects - optimized */
         .space-cursor.clicking {
-            transform: scale(0.95);
+            transform: scale(0.95); /* Simpler transform */
             transition: transform 0.05s ease-out;
         }
 
         .space-cursor.clicking .cursor-outer {
             border-color: rgba(255, 255, 255, 0.9);
             border-width: 2px;
-            animation: none;
+            animation: none; /* Remove animation on click */
         }
 
         .space-cursor.clicking .cursor-inner {
             background: #ffffff;
-            box-shadow: 0 0 8px #ffffff, 0 0 16px #ffffff;
+            box-shadow: 0 0 8px #ffffff, 0 0 16px #ffffff; /* Reduced glow */
         }
 
         /* Landing Page */
@@ -165,7 +165,7 @@
 
         .rocket-btn {
             border: none;
-            cursor: none;
+            cursor: none; /* Hide default cursor for custom cursor */
             position: relative;
             width: 300px;
             height: 80px;
@@ -176,6 +176,7 @@
             display: block;
             border-radius: 50% 50% 50% 0% / 0% 50% 50% 50%;
             box-shadow: 0 5px 20px rgba(0, 120, 212, 0.4);
+            /* Add metallic effect */
             background: linear-gradient(135deg, 
                 #0078D4 0%, 
                 #00BCF2 25%, 
@@ -202,6 +203,7 @@
             border-top: 30px solid transparent;
             border-bottom: 30px solid transparent;
             z-index: 2;
+            /* Add flame gradient */
             filter: drop-shadow(0 0 10px rgba(255, 71, 87, 0.6));
         }
 
@@ -232,6 +234,7 @@
             box-shadow: 0 2px 8px rgba(255, 71, 87, 0.4);
         }
 
+        /* Add rocket window/porthole */
         .rocket-btn .rocket-window {
             position: absolute;
             left: 40px;
@@ -326,6 +329,7 @@
             50% { transform: translateY(-50%) rotate(255deg) scale(1.1); }
         }
 
+        /* Add rocket details */
         .rocket-btn .rocket-text {
             position: relative;
             z-index: 3;
@@ -339,6 +343,7 @@
             letter-spacing: 0.5px;
         }
 
+        /* Enhanced Launch animation */
         @keyframes rocketLaunch {
             0% {
                 transform: translateX(0) translateY(0) scale(1) rotate(0deg);
@@ -406,6 +411,7 @@
         /* Game Canvas */
         #gameCanvas {
             display: block;
+            cursor: pointer;
         }
 
         /* UI Overlay */
@@ -497,6 +503,7 @@
             padding: 0.8rem 1.5rem;
             border: none;
             border-radius: 25px;
+            cursor: pointer;
             font-weight: 600;
             transition: all 0.3s ease;
         }
@@ -597,7 +604,7 @@
             color: white;
         }
 
-        /* Reset Button */
+        /* Reset Button - Top Right */
         .reset-btn {
             position: absolute;
             top: 20px;
@@ -608,6 +615,7 @@
             border: none;
             color: white;
             border-radius: 12px;
+            cursor: pointer;
             font-weight: 600;
             font-size: .7rem;
             display: flex;
@@ -643,22 +651,28 @@
             animation: fastRotateReset 0.5s ease-in-out infinite;
         }
 
+        @keyframes rotateReset {
+            0%, 90%, 100% { transform: rotate(0deg); }
+            95% { transform: rotate(360deg); }
+        }
+
         @keyframes fastRotateReset {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
 
-        /* Mute Button */
+        /* Mute Button - Top Right (beside reset) */
         .mute-btn {
             position: absolute;
             top: 20px;
-            right: 120px;
+            right: 120px; /* Position it beside the reset button */
             width: 90px;
             height: 45px;
             background: linear-gradient(135deg, #0078D4, #00BCF2);
             border: none;
             color: white;
             border-radius: 12px;
+            cursor: pointer;
             font-weight: 600;
             font-size: 0.7rem;
             display: flex;
@@ -699,6 +713,7 @@
             50% { transform: scale(1.1); }
         }
 
+        /* Muted state */
         .mute-btn.muted {
             background: linear-gradient(135deg, #666, #555);
             box-shadow: 0 4px 15px rgba(102, 102, 102, 0.3);
@@ -709,7 +724,7 @@
             box-shadow: 0 6px 25px rgba(102, 102, 102, 0.5);
         }
 
-        /* Notification Modal */
+        /* Notification Modal - High Performance Animations */
         .notification-modal {
             position: fixed;
             top: 0;
@@ -773,10 +788,500 @@
             opacity: 1;
         }
 
+        /* Enhanced modal exit animation */
         .notification-modal:not(.active) .notification-modal-content {
             transform: translateY(-30px) scale(0.9);
             opacity: 0;
             transition: transform 0.15s ease-in, opacity 0.15s ease-in;
+        }
+                transform: translateY(-60px) scale(0.8);
+                opacity: 0;
+                filter: blur(10px);
+            }
+        }
+
+        .notification-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            animation: headerSlideIn 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) 0.1s both;
+        }
+
+        @keyframes headerSlideIn {
+            0% {
+                transform: translateX(-30px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification-modal-header h3 {
+            color: #00BCF2;
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+
+        .notification-icon {
+            font-size: 1.2rem;
+            margin-right: 0.5rem;
+            animation: iconPulse 2.5s ease-in-out infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { 
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            50% { 
+                transform: scale(1.15);
+                opacity: 1;
+            }
+        }
+
+        .close-notification-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1.5rem;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            opacity: 0.7;
+            animation: closeButtonFadeIn 0.6s ease-out 0.3s both;
+        }
+
+        @keyframes closeButtonFadeIn {
+            0% {
+                transform: rotate(-180deg) scale(0.5);
+                opacity: 0;
+            }
+            100% {
+                transform: rotate(0deg) scale(1);
+                opacity: 0.7;
+            }
+        }
+
+        .close-notification-btn:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.2) rotate(90deg);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+        }
+
+        .notification-modal-body {
+            margin-bottom: 1.5rem;
+            animation: bodySlideUp 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) 0.2s both;
+        }
+
+        @keyframes bodySlideUp {
+            0% {
+                transform: translateY(40px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .notification-icon-container {
+            margin-bottom: 1rem;
+        }
+
+        .notification-large-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+            animation: largeIconBounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+        }
+
+        @keyframes largeIconBounce {
+            0% {
+                transform: scale(0) rotate(-180deg);
+                opacity: 0;
+            }
+            60% {
+                transform: scale(1.2) rotate(-90deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        .notification-message {
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+            animation: messageSlideIn 0.5s ease-out 0.4s both;
+        }
+
+        @keyframes messageSlideIn {
+            0% {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+            100% {
+                width: 100%;
+                opacity: 1;
+            }
+        }
+
+        .notification-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            line-height: 1.4;
+            animation: subtitleFadeIn 0.5s ease-out 0.5s both;
+        }
+
+        @keyframes subtitleFadeIn {
+            0% {
+                transform: translateY(15px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 0.8;
+            }
+        }
+
+        .notification-modal-footer {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: footerSlideIn 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) 0.5s both;
+        }
+
+        @keyframes footerSlideIn {
+            0% {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .notification-btn {
+            background: linear-gradient(45deg, #0078D4, #00BCF2);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+            position: relative;
+            overflow: hidden;
+            will-change: transform;
+            animation: buttonSlideIn 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) 0.6s both;
+        }
+
+        @keyframes buttonSlideIn {
+            0% {
+                transform: translateY(20px) scale(0.9);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .notification-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 50%;
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transform: translate(-50%, -50%);
+        }
+
+        .notification-btn:hover::before {
+            width: 250px;
+            height: 250px;
+        }
+
+        .notification-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(0, 120, 212, 0.4),
+                       0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .notification-btn:active {
+            transform: translateY(-1px) scale(0.98);
+            transition: all 0.1s ease;
+        }
+
+        /* High Performance optimizations for modal animations */
+        .notification-modal-content,
+        .notification-modal-overlay,
+        .notification-btn,
+        .close-notification-btn {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+            will-change: transform, opacity;
+            contain: layout style paint;
+        }
+
+        /* Use GPU acceleration for smooth animations */
+        .notification-modal.active .notification-modal-content,
+        .notification-modal.active .notification-modal-overlay {
+            transform: translateZ(0);
+        }
+
+        /* Reduced motion support for accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            .notification-modal,
+            .notification-modal-content,
+            .notification-modal-header,
+            .notification-modal-body,
+            .notification-modal-footer,
+            .notification-btn,
+            .close-notification-btn {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Warning Modal (Reset Confirmation) */
+        .notification-modal.warning .notification-modal-content {
+            border-color: #f39c12;
+            box-shadow: 0 20px 60px rgba(243, 156, 18, 0.3);
+        }
+
+        .notification-modal.warning .notification-modal-header h3 {
+            color: #f39c12;
+        }
+
+        .notification-modal.warning .notification-large-icon {
+            color: #f39c12;
+        }
+
+        .notification-modal.warning .notification-message {
+            color: #f39c12;
+        }
+
+        .notification-modal.warning .cancel-btn {
+            background: transparent;
+            border: 2px solid #5C2D91;
+            color: #5C2D91;
+        }
+
+        .notification-modal.warning .cancel-btn:hover {
+            background: rgba(92, 45, 145, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(92, 45, 145, 0.3);
+        }
+
+        .notification-modal.warning .confirm-btn {
+            background: linear-gradient(45deg, #ff4757, #ff3838);
+            color: white;
+        }
+
+        .notification-modal.warning .confirm-btn:hover {
+            background: linear-gradient(45deg, #ff3838, #ff2828);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 71, 87, 0.5);
+        }
+
+        /* Success Modal */
+        .notification-modal.success .notification-modal-content {
+            border-color: #27ae60;
+            box-shadow: 0 20px 60px rgba(39, 174, 96, 0.3);
+        }
+
+        .notification-modal.success .notification-modal-header h3 {
+            color: #27ae60;
+        }
+
+        .notification-modal.success .notification-large-icon {
+            color: #27ae60;
+        }
+
+        .notification-modal.success .notification-message {
+            color: #27ae60;
+        }
+
+        .notification-modal.success .notification-btn {
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            color: white;
+        }
+
+        .notification-modal.success .notification-btn:hover {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.5);
+        }
+
+        /* Error Modal */
+        .notification-modal.error .notification-modal-content {
+            border-color: #e74c3c;
+            box-shadow: 0 20px 60px rgba(231, 76, 60, 0.3);
+        }
+
+        .notification-modal.error .notification-modal-header h3 {
+            color: #e74c3c;
+        }
+
+        .notification-modal.error .notification-large-icon {
+            color: #e74c3c;
+        }
+
+        .notification-modal.error .notification-message {
+            color: #e74c3c;
+        }
+
+        .notification-modal.error .notification-btn {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .notification-modal.error .notification-btn:hover {
+            background: linear-gradient(45deg, #c0392b, #e74c3c);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.5);
+        }
+
+        /* Info Modal (Project Panel) */
+        .notification-modal.info .notification-modal-content {
+            border-color: #0078D4;
+            box-shadow: 0 20px 60px rgba(0, 120, 212, 0.3);
+        }
+
+        .notification-modal.info .notification-modal-header h3 {
+            color: #00BCF2;
+        }
+
+        .notification-modal.info .notification-large-icon {
+            color: #0078D4;
+        }
+
+        .notification-modal.info .notification-message {
+            color: #0078D4;
+        }
+
+        .notification-modal.info .demo-btn {
+            background: linear-gradient(45deg, #0078D4, #00BCF2);
+            color: white;
+        }
+
+        .notification-modal.info .demo-btn:hover {
+            background: linear-gradient(45deg, #00BCF2, #0078D4);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 120, 212, 0.5);
+        }
+
+        .notification-modal.info .close-btn {
+            background: transparent;
+            border: 2px solid #5C2D91;
+            color: #5C2D91;
+        }
+
+        .notification-modal.info .close-btn:hover {
+            background: rgba(92, 45, 145, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(92, 45, 145, 0.3);
+        }
+
+        /* Responsive modal */
+        @media (max-width: 768px) {
+            .notification-modal-content {
+                max-width: 90%;
+                padding: 1.5rem;
+            }
+
+            .notification-modal-footer {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .notification-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Notification Modal - Project Panel Style */
+        .notification-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .notification-modal.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .notification-modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .notification-modal-content {
+            position: relative;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #0078D4;
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 120, 212, 0.3);
+            animation: notificationSlideIn 0.3s ease-out;
+            z-index: 2001;
+        }
+
+        @keyframes notificationSlideIn {
+            0% {
+                transform: translateY(-50px) scale(0.9);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
         }
 
         .notification-modal-header {
@@ -793,15 +1298,11 @@
             font-weight: 600;
         }
 
-        .notification-icon {
-            font-size: 1.2rem;
-            margin-right: 0.5rem;
-        }
-
         .close-notification-btn {
             background: none;
             border: none;
             color: #fff;
+            cursor: pointer;
             font-size: 1.5rem;
             padding: 0.5rem;
             border-radius: 50%;
@@ -811,9 +1312,8 @@
 
         .close-notification-btn:hover {
             opacity: 1;
-            background: rgba(255, 255, 255, 0.15);
-            transform: scale(1.2) rotate(90deg);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.1);
         }
 
         .notification-modal-body {
@@ -827,7 +1327,6 @@
         .notification-large-icon {
             font-size: 3rem;
             margin-bottom: 1rem;
-            display: block;
         }
 
         .notification-message {
@@ -849,52 +1348,24 @@
         }
 
         .notification-btn {
-            background: linear-gradient(45deg, #0078D4, #00BCF2);
-            color: white;
             padding: 0.8rem 1.5rem;
             border: none;
             border-radius: 25px;
+            cursor: pointer;
             font-weight: 600;
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             margin: 0;
-            position: relative;
-            overflow: hidden;
-            will-change: transform;
-        }
-
-        .notification-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255, 255, 255, 0.25);
-            border-radius: 50%;
-            transition: all 0.5s ease;
-            transform: translate(-50%, -50%);
-        }
-
-        .notification-btn:hover::before {
-            width: 250px;
-            height: 250px;
         }
 
         .notification-btn:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 15px 35px rgba(0, 120, 212, 0.4),
-                       0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 120, 212, 0.3);
         }
 
-        .notification-btn:active {
-            transform: translateY(-1px) scale(0.98);
-            transition: all 0.1s ease;
-        }
-
-        /* Modal type variations */
+        /* Button variations based on modal type */
         .notification-modal.warning .notification-modal-content {
             border-color: #f39c12;
             box-shadow: 0 20px 60px rgba(243, 156, 18, 0.3);
@@ -963,6 +1434,7 @@
             box-shadow: 0 5px 15px rgba(39, 174, 96, 0.5);
         }
 
+        /* Error Modal */
         .notification-modal.error .notification-modal-content {
             border-color: #e74c3c;
             box-shadow: 0 20px 60px rgba(231, 76, 60, 0.3);
@@ -1049,25 +1521,46 @@
             }
         }
 
-        /* Reduced motion support */
-        @media (prefers-reduced-motion: reduce) {
-            .notification-modal,
-            .notification-modal-content,
-            .notification-btn,
-            .close-notification-btn {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
+        /* Click ripple effect */
+        .click-ripple {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .click-ripple::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            animation: clickRipple 0.6s ease-out forwards;
+        }
+
+        @keyframes clickRipple {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.5); /* Reduced scale */
+                opacity: 0;
             }
         }
 
-        /* Space-themed cursor variations */
+        /* Space-themed cursor variations - optimized */
         .space-cursor.rocket-mode .cursor-outer {
             border-color: rgba(255, 107, 0, 0.6);
-            animation: none;
+            animation: none; /* Remove animation in rocket mode for better performance */
         }
 
         .space-cursor.rocket-mode .cursor-inner {
             background: #ff6b00;
-            box-shadow: 0 0 4px #ff6b00, 0 0 8px #ff6b00;
+            box-shadow: 0 0 4px #ff6b00, 0 0 8px #ff6b00; /* Reduced glow */
         }
+
+        /* ...existing code... */
