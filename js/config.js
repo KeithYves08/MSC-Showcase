@@ -86,25 +86,26 @@ export const PROJECT_DATA = [
     },
     {
         id: 7,
-        name: "Social Media Tool",
-        description: "Advanced social media management and analytics platform.",
-        url: "https://example.com/social",
+        name: "NU Laguna hailed HackForGov3 CTF champ",
+        description: "Your very own MSC officers triumph in the field of cybersecurity.",
+        url: "https://www.manilatimes.net/2024/06/27/campus-press/nu-laguna-hailed-hackforgov3-ctf-champ/1953549",
         x: 150,
         y: 650,
         size: 45,
         color: "#0078D4",
-        type: "web"
+        type: "achievement"
     },
     {
+        // Information System Mark&Kyle
         id: 8,
-        name: "Blockchain App",
-        description: "Decentralized application for secure transactions and smart contracts.",
-        url: "https://example.com/blockchain",
-        x: 250,
+        name: "Inventory & Sales Management System using .NET and Windows Forms",
+        description: "A desktop-based information system made with Microsoft technologies.",
+        url: "https://medium.com/@kylesanchez3000/inventory-sales-management-system-using-net-and-windows-forms-1bb9e1523d61",
+        x: 400,
         y: 350,
         size: 45,
         color: "#00BCF2",
-        type: "blockchain"
+        type: "web"
     },
     {
         id: 9,
@@ -122,7 +123,7 @@ export const PROJECT_DATA = [
         name: "Love in Verses",
         description: "Showcasing creative adaptation, this project highlights literary diversity through multimedia in a gallery-style format for broad audience engagement.",
         url: "https://bespoke-pithivier-dd2da0.netlify.app/",
-        x: 300,
+        x: 350,
         y: 750,
         size: 45,
         color: "#0078D4",
@@ -176,6 +177,7 @@ export const PROJECT_ICONS = {
     game: '🎮',
     figma: '📹',
     qr: '📱',
+    achievement: '🏆',
     hiraya: '🌅', // Custom icon for Hiraya Awakened Game
     default: '🌍'
 };
