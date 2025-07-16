@@ -65,7 +65,13 @@ export function addQRPlanet() {
 export function areAllRegularPlanetsDiscovered() {
     const regularPlanets = gameState.projects.filter(p => !p.isQR);
     const discoveredRegular = regularPlanets.filter(p => p.discovered);
-    return discoveredRegular.length === regularPlanets.length;
+    
+    // Debug logging
+    console.log(`Regular planets: ${regularPlanets.length}`);
+    console.log(`Discovered regular planets: ${discoveredRegular.length}`);
+    console.log(`Regular planets discovered: ${discoveredRegular.map(p => p.name).join(', ')}`);
+    
+    return discoveredRegular.length === regularPlanets.length && regularPlanets.length === 12;
 }
 
 // Get discovery progress
@@ -79,4 +85,19 @@ export function getDiscoveryProgress() {
 export function clearAllTrails() {
     gameState.rocketTrails = [];
     gameState.smokeTrails = [];
+}
+
+// Debug function to check planet status
+export function debugPlanetStatus() {
+    console.log('=== PLANET STATUS DEBUG ===');
+    console.log(`Total projects in gameState: ${gameState.projects.length}`);
+    console.log(`Regular planets: ${gameState.projects.filter(p => !p.isQR).length}`);
+    console.log(`QR planets: ${gameState.projects.filter(p => p.isQR).length}`);
+    console.log(`Discovered projects: ${gameState.discoveredProjects.size}`);
+    console.log('Discovered IDs:', Array.from(gameState.discoveredProjects));
+    console.log('Project details:');
+    gameState.projects.forEach(p => {
+        console.log(`  ${p.id}: ${p.name} - Discovered: ${p.discovered}, IsQR: ${!!p.isQR}`);
+    });
+    console.log('=== END DEBUG ===');
 }

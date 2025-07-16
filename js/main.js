@@ -2,7 +2,7 @@
 // MAIN GAME MODULE
 // ===================================================================
 
-import { initializeGameState, gameState } from './gameState.js';
+import { initializeGameState, gameState, debugPlanetStatus } from './gameState.js';
 import { loadProgress, autoSave } from './saveLoad.js';
 import { drawAstronaut, drawProjects, clearCanvas, clearDirtyRects, drawBackground, initSpaceCursor, animateSpaceCursor, updateCursorMode } from './renderer.js';
 import { updateAstronaut, checkCollisions, adjustProjectPositions } from './physics.js';
@@ -177,6 +177,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Add performance monitoring to console (for debugging)
     window.getPerformanceStats = () => window.spaceOdyssey.getPerformanceStats();
+    
+    // Add debug function for planet status
+    window.debugPlanetStatus = debugPlanetStatus;
     
     // Optional: Add performance display in console every 10 seconds
     setInterval(() => {

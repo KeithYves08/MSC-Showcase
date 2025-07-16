@@ -55,12 +55,14 @@ export function showProjectPanel(project) {
             ]
         );
         
-        // Replace the large icon with QR code image
-        const notificationLargeIcon = document.getElementById('notificationLargeIcon');
-        if (notificationLargeIcon) {
-            notificationLargeIcon.className = ''; // Clear all icon classes
-            notificationLargeIcon.innerHTML = `<img src="assets/QR.webp" alt="QR Code" style="width: 150px; height: 150px; object-fit: contain; border-radius: 8px;">`;
-        }
+        // Replace the large icon with QR code image after modal is rendered
+        setTimeout(() => {
+            const notificationLargeIcon = document.getElementById('notificationLargeIcon');
+            if (notificationLargeIcon) {
+                notificationLargeIcon.className = ''; // Clear all icon classes
+                notificationLargeIcon.innerHTML = `<img src="assets/QR.webp" alt="QR Code" style="width: 150px; height: 150px; object-fit: contain; border-radius: 8px;">`;
+            }
+        }, 100); // Small delay to ensure modal is rendered
         
         updateProgress(); // Update progress when QR is shown
         return;
@@ -104,6 +106,16 @@ export function showProjectPanel(project) {
             }
         ]
     );
+    
+    // Ensure non-QR modals have proper icon (reset from any previous QR display)
+    setTimeout(() => {
+        const notificationLargeIcon = document.getElementById('notificationLargeIcon');
+        if (notificationLargeIcon && !project.isQR) {
+            notificationLargeIcon.className = 'notification-large-icon fa-solid fa-info-circle';
+            notificationLargeIcon.innerHTML = ''; // Clear any previous QR image
+            notificationLargeIcon.style.color = '#0078D4';
+        }
+    }, 100);
     
     // Set up 5-second auto-close timer
     gameState.projectPanelTimer = setTimeout(() => {
