@@ -3,7 +3,7 @@
 // ===================================================================
 
 import { CONFIG } from './config.js';
-import { gameState, clearAllTrails } from './gameState.js';
+import { gameState, clearAllTrails, removeQRPlanet } from './gameState.js';
 import { updateProgress } from './ui.js';
 import { stopThrustSound } from './audio.js';
 
@@ -106,6 +106,9 @@ export function resetProgress() {
         gameState.projects.forEach(project => {
             project.discovered = false;
         });
+        
+        // Remove QR planet if it exists (it should only appear when all regular planets are discovered)
+        removeQRPlanet();
         
         // Reset astronaut to center
         const canvas = gameState.canvas;

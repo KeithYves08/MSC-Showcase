@@ -109,11 +109,8 @@ export function showProjectPanel(project) {
     
     // Ensure non-QR modals have proper icon (reset from any previous QR display)
     setTimeout(() => {
-        const notificationLargeIcon = document.getElementById('notificationLargeIcon');
-        if (notificationLargeIcon && !project.isQR) {
-            notificationLargeIcon.className = 'notification-large-icon fa-solid fa-info-circle';
-            notificationLargeIcon.innerHTML = ''; // Clear any previous QR image
-            notificationLargeIcon.style.color = '#0078D4';
+        if (!project.isQR) {
+            resetNotificationIcon();
         }
     }, 100);
     
@@ -286,6 +283,9 @@ export function confirmReset() {
         // Reset game state
         gameState.gameStarted = false;
         
+        // Clear modal state to prevent QR code persistence
+        resetNotificationIcon();
+        
         // Update progress display
         updateProgress();
         
@@ -420,11 +420,24 @@ export function showNotification(type, title, message, subtitle = '', buttonText
 }
 
 // Close notification modal
+// Reset notification modal icon state
+export function resetNotificationIcon() {
+    const notificationLargeIcon = document.getElementById('notificationLargeIcon');
+    if (notificationLargeIcon) {
+        notificationLargeIcon.className = 'notification-large-icon fa-solid fa-info-circle';
+        notificationLargeIcon.innerHTML = ''; // Clear any QR image
+        notificationLargeIcon.style.color = '#0078D4';
+    }
+}
+
 export function closeNotificationModal() {
     const notificationModal = document.getElementById('notificationModal');
     if (notificationModal) {
         notificationModal.classList.remove('active');
         document.body.style.overflow = 'hidden'; // Keep hidden since we're in a game
+        
+        // Reset the notification icon to prevent QR code from persisting
+        resetNotificationIcon();
     }
 }
 

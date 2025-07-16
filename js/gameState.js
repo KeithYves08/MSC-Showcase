@@ -66,25 +66,32 @@ export function areAllRegularPlanetsDiscovered() {
     const regularPlanets = gameState.projects.filter(p => !p.isQR);
     const discoveredRegular = regularPlanets.filter(p => p.discovered);
     
-    // Debug logging
-    console.log(`Regular planets: ${regularPlanets.length}`);
-    console.log(`Discovered regular planets: ${discoveredRegular.length}`);
-    console.log(`Regular planets discovered: ${discoveredRegular.map(p => p.name).join(', ')}`);
-    
     return discoveredRegular.length === regularPlanets.length && regularPlanets.length === 12;
 }
 
 // Get discovery progress
 export function getDiscoveryProgress() {
     const discovered = gameState.discoveredProjects.size;
-    const total = gameState.projects.length;
-    return { discovered, total, percentage: (discovered / total) * 100 };
+    const regularPlanets = gameState.projects.filter(p => !p.isQR);
+    const total = regularPlanets.length; // Only count regular planets, not QR planet
+    return { discovered, total, percentage: total > 0 ? (discovered / total) * 100 : 0 };
 }
 
 // Clear all trails (for performance and cleanup)
 export function clearAllTrails() {
     gameState.rocketTrails = [];
     gameState.smokeTrails = [];
+}
+
+// Remove QR planet from projects array
+export function removeQRPlanet() {
+    const beforeCount = gameState.projects.length;
+    gameState.projects = gameState.projects.filter(project => !project.isQR);
+    const afterCount = gameState.projects.length;
+    
+    if (beforeCount !== afterCount) {
+        console.log(`QR planet removed. Projects count: ${beforeCount} → ${afterCount}`);
+    }
 }
 
 // Debug function to check planet status
