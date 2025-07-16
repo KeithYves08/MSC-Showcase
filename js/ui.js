@@ -34,6 +34,38 @@ export function showProjectPanel(project) {
         clearTimeout(gameState.projectPanelTimer);
     }
     
+    // Handle QR project differently
+    if (project.isQR) {
+        // Show QR project notification with image
+        showNotification(
+            'info',
+            project.name,
+            project.description,
+            'Scan the QR code below for more information',
+            'OK',
+            [
+                {
+                    text: 'Continue Exploring',
+                    icon: 'fa-solid fa-rocket',
+                    class: 'close-btn',
+                    onclick: function() {
+                        closeProject();
+                    }
+                }
+            ]
+        );
+        
+        // Replace the large icon with QR code image
+        const notificationLargeIcon = document.getElementById('notificationLargeIcon');
+        if (notificationLargeIcon) {
+            notificationLargeIcon.className = ''; // Clear all icon classes
+            notificationLargeIcon.innerHTML = `<img src="assets/QR.webp" alt="QR Code" style="width: 150px; height: 150px; object-fit: contain; border-radius: 8px;">`;
+        }
+        
+        updateProgress(); // Update progress when QR is shown
+        return;
+    }
+    
     // Define button handlers inline to ensure proper scope access
     const handleViewDemo = function() {
         console.log('View Demo clicked'); // Debug log

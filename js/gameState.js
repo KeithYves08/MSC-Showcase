@@ -51,8 +51,8 @@ export function addQRPlanet() {
     const canvas = gameState.canvas;
     const qrPlanet = {
         ...QR_PLANET_DATA,
-        x: canvas.width - 150,
-        y: canvas.height - 150,
+        x: canvas.width / 2, // Center horizontally
+        y: canvas.height / 2, // Center vertically
         discovered: false,
         glowIntensity: 5,
         pulse: 0
